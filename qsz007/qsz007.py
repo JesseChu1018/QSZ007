@@ -51,7 +51,6 @@ class SOC(Overlay):
         self._cfg[key] = val
 
     def __config_rfdc(self):
-        print(f"self.usp_rf_data_converter_0: {self.usp_rf_data_converter_0}")
         rf_config = self.ip_dict['usp_rf_data_converter_0']['parameters']
 
         self.hs_adc = rf_config['C_High_Speed_ADC'] == '1'
@@ -177,8 +176,8 @@ class SOC(Overlay):
         # Use the HWH parser to trace connectivity and deduce the channel numbering.
         for key, val in self.ip_dict.items():
             print(f"Initializing {key} with driver {val['driver']}")
-            if hasattr(val['driver'], 'configure_connections'):
-                getattr(self, key).configure_connections(self)
+            # if hasattr(val['driver'], 'configure_connections'):
+            #     getattr(self, key).configure_connections(self)
 
         # Signal generators (anything driven by the tProc)
         self.socip = []
