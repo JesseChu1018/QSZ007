@@ -68,7 +68,7 @@ class AbsAdcDriver(SocIp):
         # what RFDC port drives this readout?
         trace_result = soc.metadata.trace_back(self.fullpath, self.ADC_RFDC_PORT, ["usp_rf_data_converter"])
         
-        _, port, _ = trace_result[0]
+        _, port, _ = trace_result
         self['adc']['chname'] = port[1:3]
 
 class AxisTomography(AbsDacDriver, AbsAdcDriver):
