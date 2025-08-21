@@ -58,7 +58,7 @@ class AbsAdcDriver(SocIp):
         super().configure()
         
         for p in ['fs', 'fs_mult', 'fs_div', 'decimation', 'f_fabric']:
-            self['adc'][p] = self.soc['dacs'][self['adc']['chname']][p]
+            self['adc'][p] = self.soc['adcs'][self['adc']['chname']][p]
         # interpolation reduces the DDS range
         self['adc']['f_dds'] = self['fs'] / self['adc']['decimation']
         self['adc']['fdds_div'] = self['fs_div'] * self['adc']['decimation']
