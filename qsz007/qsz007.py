@@ -29,6 +29,7 @@ class SOC(Overlay):
             filepath = str(Path(__file__).parent/bitfile)
         print(f"Loading bitfile: {filepath}")
         super().__init__(filepath, ignore_version=ignore_version, download=False)
+        print("QICK SOC initialized")
         # Initialize the configuration
         self._cfg = {}
 
