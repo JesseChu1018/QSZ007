@@ -252,7 +252,7 @@ class SOC(Overlay):
         
         return True
     
-    def poll_data(self, ch:int=0, totaltime=0.5, timeout=None):
+    def poll_data(self, ch:int=0, totaltime=0.5, timeout=1):
         """
         This method polls data from the specified channel.
         """

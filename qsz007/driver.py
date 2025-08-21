@@ -262,7 +262,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.done_flag.clear()
         self.par_queue.put(cycle)
 
-    def poll_data(self, totaltime=0.5, timeout=None):
+    def poll_data(self, totaltime=0.5, timeout=1):
         """
         Poll the tomography data.
         :param total_time: Total time to poll data in seconds.
@@ -280,6 +280,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             try:
                 data = self.data_queue.get(block=True, timeout=timeout)
                 # if we stopped the readout while we were waiting for data, break out and return
+                if self.done_flag.is_set():
+                    print("tomography done")
                 if self.stop_flag.is_set():
                     break
                 new_data.append(data)
