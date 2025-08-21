@@ -51,6 +51,7 @@ class SOC(Overlay):
         self._cfg[key] = val
 
     def __config_rfdc(self):
+        print(f"self.usp_rf_data_converter_0: {self.usp_rf_data_converter_0}")
         rf_config = self.ip_dict['usp_rf_data_converter_0']['parameters']
 
         self.hs_adc = rf_config['C_High_Speed_ADC'] == '1'
@@ -161,8 +162,8 @@ class SOC(Overlay):
         if download:
             # self.download()
             pass
-        if not self.__clocks_locked():
-            print("Clocks not locked, setting all clocks")
+        # if not self.__clocks_locked():
+        #     print("Clocks not locked, setting all clocks")
             # self.__set_all_clks()
             # self.download()
         # if not self.__clocks_locked():
