@@ -293,6 +293,8 @@ class Metadata:
                 to_check.append((block, "M00_AXI"))
             elif block_type == "axis_data_fifo":
                 to_check.append((block, "M_AXIS"))
+            elif block_type == "fifo_generator":
+                to_check.append((block, "M_AXIS"))
             elif block_type == "axis_chirp_mux":
                 to_check.append((block, "M00_AXIS"))
             elif block_type == "axis_wf_mux":
