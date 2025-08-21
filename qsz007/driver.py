@@ -81,24 +81,24 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
     """
     bindto = ['Quantaser:user:axis_tomography:1.0']
     REGISTERS = {'start': 0,
-                 'tx_period': 0,
-                 'tx_polarity': 0,
-                 'tx_tag_fall': 0,
-                 'tx_tag_ttl0': 0,
-                 'tx_tag_ttl1': 0,
-                 'tx_tag_ttl2': 0,
-                 'tx_tag_ttl3': 0,
-                 'tx_tag_ttl4': 0,
-                 'tx_tag_ttl5': 0,
-                 'tx_tag_ttl6': 0,
-                 'tx_tag_ttl7': 0,
-                 'tx_ratio_rise': 0,
-                 'tx_ratio_fall': 0,
-                 'rx_state': 0,
-                 'rx_tri_cnt': 0,
-                 'rx_data_cnt': 0,
-                 'rx_tri_mode': 0,
-                 'rx_threshold': 0,}
+                 'tx_period': 1,
+                 'tx_polarity': 2,
+                 'tx_tag_fall': 3,
+                 'tx_tag_ttl0': 4,
+                 'tx_tag_ttl1': 5,
+                 'tx_tag_ttl2': 6,
+                 'tx_tag_ttl3': 7,
+                 'tx_tag_ttl4': 8,
+                 'tx_tag_ttl5': 9,
+                 'tx_tag_ttl6': 10,
+                 'tx_tag_ttl7': 11,
+                 'tx_ratio_rise': 12,
+                 'tx_ratio_fall': 13,
+                 'rx_state': 14,
+                 'rx_tri_cnt': 15,
+                 'rx_data_cnt': 16,
+                 'rx_tri_mode': 17,
+                 'rx_threshold': 18,}
     
     # Name of the output connect to RFDC.
     DAC_RFDC_PORT = 'M0_DAC'
