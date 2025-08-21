@@ -62,6 +62,7 @@ class SOC(Overlay):
         self['adcs'] = OrderedDict()
         
         for iTile in range(4):
+            print(f"Configuring RFDC DAC tile {iTile}")
             if rf_config['C_DAC%d_Enable' % (iTile)] != '1':
                 continue
             self.dac_tiles.append(iTile)
@@ -87,6 +88,7 @@ class SOC(Overlay):
                                        'interpolation': interpolation}
 
         for iTile in range(4):
+            print(f"Configuring RFDC ADC tile {iTile}")
             if rf_config['C_ADC%d_Enable' % (iTile)] != '1':
                 continue
             self.adc_tiles.append(iTile)
