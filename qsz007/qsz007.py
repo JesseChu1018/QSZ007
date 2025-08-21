@@ -159,6 +159,7 @@ class SOC(Overlay):
         """
         Configure PLLs if requested, or if any ADC/DAC is not locked.
         """
+        print(f"self.dac_tiles: {self.dac_tiles}, self.adc_tiles: {self.adc_tiles}")
         if download:
             # self.download()
             pass
