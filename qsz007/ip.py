@@ -72,7 +72,7 @@ class SocIp(DefaultIP):
         pass
 
     def configure_connections(self, soc):
-        self._cfg['soc'] = soc
+        self.soc = soc
         # trace the RFDC port this IP connects to
 
 class Metadata:
