@@ -148,11 +148,12 @@ class SOC(Overlay):
         Configure PLLs if requested, or if any ADC/DAC is not locked.
         """
         if download:
-            self.download()
+            # self.download()
+            pass
         if not self.__clocks_locked():
             print("Clocks not locked, setting all clocks")
             self.__set_all_clks()
-            self.download()
+            # self.download()
         if not self.__clocks_locked():
             raise RuntimeError(
                 "Not all DAC and ADC PLLs are locked. You may want to repeat the initialization of the QickSoc.")
