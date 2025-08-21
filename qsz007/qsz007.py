@@ -2,6 +2,7 @@ from collections import OrderedDict
 from pynq.overlay import Overlay
 from pynq.buffer import allocate
 import xrfclk
+import xrfdc
 from xrfdc import RFdc
 from pathlib import Path
 import numpy as np
@@ -161,8 +162,8 @@ class SOC(Overlay):
         if download:
             # self.download()
             pass
-        # if not self.__clocks_locked():
-        #     print("Clocks not locked, setting all clocks")
+        if not self.__clocks_locked():
+            print("Clocks not locked, setting all clocks")
             # self.__set_all_clks()
             # self.download()
         # if not self.__clocks_locked():
