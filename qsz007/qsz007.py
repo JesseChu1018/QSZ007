@@ -22,27 +22,20 @@ class SOC(Overlay):
         """
         This method constructs the QSZ007 object.
         """
-        print("Initializing QICK SOC")
         if bitfile == None:
             filepath = str(Path(__file__).parent/'qsz007.bit')
         else:
             filepath = str(Path(__file__).parent/bitfile)
-        print(f"Loading bitfile: {filepath}")
         super().__init__(filepath, ignore_version=ignore_version, download=False)
-        print("QICK SOC initialized")
         # Initialize the configuration
         self._cfg = {}
 
         self.__config_rfdc() # get on used DAC and ADC tiles and their reference clocks
-        print("config_rfdc")
         self.__config_clocks(download) # set the clocks if clocks are not locked
-        print("config_clocks")
 
         self.metadata = Metadata(self)
-        print("metadata")
 
         self.__init_socip()
-        print("init_socip")
 
     def __getitem__(self, key):
         return self._cfg[key]
@@ -156,17 +149,14 @@ class SOC(Overlay):
         """
         Configure PLLs if requested, or if any ADC/DAC is not locked.
         """
-        print(f"self.dac_tiles: {self.dac_tiles}, self.adc_tiles: {self.adc_tiles}")
-        time.sleep(1)  # wait for the overlay to be ready
         if download:
             self.download()
         if not self.__clocks_locked():
-            print("Clocks not locked, setting all clocks")
-            # self.__set_all_clks()
-            # self.download()
-        # if not self.__clocks_locked():
-            # raise RuntimeError(
-                # "Not all DAC and ADC PLLs are locked. You may want to repeat the initialization of the QickSoc.")
+            self.__set_all_clks()
+            self.download()
+        if not self.__clocks_locked():
+            raise RuntimeError(
+                "Not all DAC and ADC PLLs are locked. You may want to repeat the initialization of the QickSoc.")
 
     def __init_socip(self):
         """
@@ -174,9 +164,8 @@ class SOC(Overlay):
         """
         # Use the HWH parser to trace connectivity and deduce the channel numbering.
         for key, val in self.ip_dict.items():
-            print(f"Initializing {key} with driver {val['driver']}")
-            # if hasattr(val['driver'], 'configure_connections'):
-            #     getattr(self, key).configure_connections(self)
+            if hasattr(val['driver'], 'configure_connections'):
+                getattr(self, key).configure_connections(self)
 
         # Signal generators (anything driven by the tProc)
         self.socip = []

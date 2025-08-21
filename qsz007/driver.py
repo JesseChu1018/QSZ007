@@ -7,10 +7,10 @@ from queue import Queue, Empty
 import time
 import numpy as np
 import logging
-from pynq.overlay import DefaultIP
 from pynq.buffer import allocate
+from qsz007.ip import SocIp
 
-class AbsDacDriver(DefaultIP):
+class AbsDacDriver(SocIp):
     """
     Abstract class which defines methods that for RFDC DAC.
     """
@@ -45,7 +45,7 @@ class AbsDacDriver(DefaultIP):
         _, port, _ = trace_result[0]
         self['dac']['chname'] = port[1:3]
 
-class AbsAdcDriver(DefaultIP):
+class AbsAdcDriver(SocIp):
     """
     Abstract class which defines methods that for RFDC ADC.
     """
