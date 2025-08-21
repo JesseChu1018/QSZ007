@@ -207,8 +207,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         """
         tri_cnt = self.rx_tri_cnt
         data_cnt = self.rx_data_cnt
-        if tri_cnt == 0:
-            return []
         
         time_len = (tri_cnt + 1) * 4 # 4 bytes for each time point
         dc_len = (tri_cnt + 1) * self.INTERPOLATION * 2 # 2 bytes for each DC point
