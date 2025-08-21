@@ -27,6 +27,8 @@ class SOC(Overlay):
         else:
             filepath = str(Path(__file__).parent/bitfile)
         super().__init__(filepath, ignore_version=ignore_version, download=False)
+        # Initialize the configuration
+        self._cfg = {}
 
         self.__config_rfdc() # get on used DAC and ADC tiles and their reference clocks
         self.__config_clocks(download) # set the clocks if clocks are not locked
@@ -34,6 +36,12 @@ class SOC(Overlay):
         self.metadata = Metadata(self)
 
         self.__init_socip()
+
+    def __getitem__(self, key):
+        return self._cfg[key]
+
+    def __setitem__(self, key, val):
+        self._cfg[key] = val
 
     def __config_rfdc(self):
         rf_config = self.ip_dict['usp_rf_data_converter_0']['parameters']
