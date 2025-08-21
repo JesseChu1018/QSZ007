@@ -31,7 +31,7 @@ class SOC(Overlay):
         super().__init__(filepath, ignore_version=ignore_version, download=False)
         print("QICK SOC initialized")
         # Initialize the configuration
-        self._cfg = {}
+        # self._cfg = {}
 
         self.__config_rfdc() # get on used DAC and ADC tiles and their reference clocks
         print("config_rfdc")
@@ -44,11 +44,13 @@ class SOC(Overlay):
         self.__init_socip()
         print("init_socip")
 
-    def __getitem__(self, key):
-        return self._cfg[key]
+    # def __getitem__(self, key):
+    #     super().__getitem__(key)
+    #     return self._cfg[key]
 
-    def __setitem__(self, key, val):
-        self._cfg[key] = val
+    # def __setitem__(self, key, val):
+    #     super().__setitem__(key, val)
+    #     self._cfg[key] = val
 
     def __config_rfdc(self):
         rf_config = self.ip_dict['usp_rf_data_converter_0']['parameters']
