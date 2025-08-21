@@ -43,6 +43,7 @@ class AbsDacDriver(SocIp):
         trace_result = soc.metadata.trace_forward(self.fullpath, self.DAC_RFDC_PORT, ["usp_rf_data_converter"], 1)
         
         _, port, _ = trace_result[0]
+        self['dac'] = {}
         self['dac']['chname'] = port[1:3]
 
 class AbsAdcDriver(SocIp):
@@ -69,6 +70,7 @@ class AbsAdcDriver(SocIp):
         trace_result = soc.metadata.trace_back(self.fullpath, self.ADC_RFDC_PORT, ["usp_rf_data_converter"])
         
         _, port, _ = trace_result
+        self['adc'] = {}
         self['adc']['chname'] = port[1:3]
 
 class AxisTomography(AbsDacDriver, AbsAdcDriver):
