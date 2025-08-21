@@ -164,8 +164,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         rise_clk = int(np.round(150 * 1000 * self['dac']['f_fabric']))
         fall_clk = int(np.round(fall_time_ms * 1000 * self['dac']['f_fabric']))
         self.tx_period = rise_clk + fall_clk
-        self.tx_ratio_rise = int(np.round((self.DAC_MAXV * max_scal * 2**16) / rise_clk))
-        self.tx_ratio_fall = int(np.round((self.DAC_MAXV * max_scal * 2**16) / fall_clk))
+        self.tx_ratio_rise = int(np.round((self.DAC_MAXV * max_scal * 2**16) / rise_clk)) # Positive for rise
+        self.tx_ratio_fall = (int(np.round((self.DAC_MAXV * max_scal * 2**16) / fall_clk)) * -1) # Negative for fall
 
     def set_ttl_tag(self, ttl_bit:int=0, time_ms:int=150):
         """
@@ -207,6 +207,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         """
         tri_cnt = self.rx_tri_cnt
         data_cnt = self.rx_data_cnt
+        if tri_cnt == 0:
+            return []
         
         time_len = (tri_cnt + 1) * 4 # 4 bytes for each time point
         dc_len = (tri_cnt + 1) * self.INTERPOLATION * 2 # 2 bytes for each DC point
@@ -321,6 +323,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                             break
                         else:
                             data = self.get_data()  # Get the data for the previous cycle
+                            if data == []:
+                                print("No data received for cycle %d" % ctcle_cnt)
                             self.data_queue.put(data)
                         ctcle_cnt += 1
                     else:
