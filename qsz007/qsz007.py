@@ -118,6 +118,18 @@ class SOC(Overlay):
                                        'f_fabric': f_fabric,
                                        'decimation': decimation}
 
+        def get_common_freq(freqs):
+            """
+            Check that all elements of the list are equal, and return the common value.
+            """
+            if not freqs:  # input is empty list
+                return None
+            if len(set(freqs)) != 1:
+                raise RuntimeError("Unexpected frequencies:", freqs)
+            return freqs[0]
+
+        self['refclk_freq'] = get_common_freq(refclk_freqs)
+
     def __clocks_locked(self):
         """
         Check if all the clocks are locked.
@@ -136,8 +148,8 @@ class SOC(Overlay):
         # LMX2594 is not used
         # available: 102.4, 204.8, 409.6, 491.52, 737.0
         """
-        lmk_freq = self.ref_clk
-        lmx_freq = self.ref_clk*2
+        lmk_freq = self['refclk_freq']
+        lmx_freq = self['refclk_freq']*2
         assert hasattr(xrfclk, "xrfclk") # ZCU216 only has a pynq 2.7 image
         xrfclk.xrfclk._find_devices()
         xrfclk.xrfclk._read_tics_output()
