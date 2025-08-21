@@ -307,6 +307,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             try:
                 while self.par_queue.empty():
                     time.sleep(0.01)  # Wait for a new cycle request
+                print("Starting tomography cycle")
                 cycle_target = self.par_queue.get(block=True)
                 ctcle_cnt = 0
                 self.start = 1
