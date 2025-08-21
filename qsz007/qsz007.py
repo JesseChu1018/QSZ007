@@ -58,12 +58,10 @@ class SOC(Overlay):
         self.dac_tiles = []
         self.adc_tiles = []
         refclk_freqs = []
-        print("Configuring RFDC tiles")
         self['dacs'] = OrderedDict()
         self['adcs'] = OrderedDict()
         
         for iTile in range(4):
-            print(f"Configuring RFDC DAC tile {iTile}")
             if rf_config['C_DAC%d_Enable' % (iTile)] != '1':
                 continue
             self.dac_tiles.append(iTile)
@@ -89,7 +87,6 @@ class SOC(Overlay):
                                        'interpolation': interpolation}
 
         for iTile in range(4):
-            print(f"Configuring RFDC ADC tile {iTile}")
             if rf_config['C_ADC%d_Enable' % (iTile)] != '1':
                 continue
             self.adc_tiles.append(iTile)
@@ -160,11 +157,12 @@ class SOC(Overlay):
         Configure PLLs if requested, or if any ADC/DAC is not locked.
         """
         print(f"self.dac_tiles: {self.dac_tiles}, self.adc_tiles: {self.adc_tiles}")
+        time.sleep(1)  # wait for the overlay to be ready
         if download:
             # self.download()
             pass
-        # if not self.__clocks_locked():
-            # print("Clocks not locked, setting all clocks")
+        if not self.__clocks_locked():
+            print("Clocks not locked, setting all clocks")
             # self.__set_all_clks()
             # self.download()
         # if not self.__clocks_locked():
