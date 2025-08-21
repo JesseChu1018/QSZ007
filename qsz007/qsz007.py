@@ -35,7 +35,7 @@ class SOC(Overlay):
 
         self.__config_rfdc() # get on used DAC and ADC tiles and their reference clocks
         print("config_rfdc")
-        # self.__config_clocks(download) # set the clocks if clocks are not locked
+        self.__config_clocks(download) # set the clocks if clocks are not locked
         print("config_clocks")
 
         self.metadata = Metadata(self)
@@ -150,6 +150,7 @@ class SOC(Overlay):
         if download:
             self.download()
         if not self.__clocks_locked():
+            print("Clocks not locked, setting all clocks")
             self.__set_all_clks()
             self.download()
         if not self.__clocks_locked():
@@ -161,6 +162,7 @@ class SOC(Overlay):
         Initialize the SOC IPs.
         """
         # Use the HWH parser to trace connectivity and deduce the channel numbering.
+        print(f"self.ip_dict: {self.ip_dict}")
         for key, val in self.ip_dict.items():
             if hasattr(val['driver'], 'configure_connections'):
                 getattr(self, key).configure_connections(self)
