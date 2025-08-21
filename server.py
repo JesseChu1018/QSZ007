@@ -1,6 +1,6 @@
 import Pyro4
 import Pyro4.naming
-from qrng.qrng import QRNG
+from qsz007.qsz007 import SOC
 
 def start_server(ns_host, ns_port=8888, proxy_name='qrng', **kwargs):
     """Initializes the QickSoc and starts a Pyro4 proxy server.
@@ -38,12 +38,12 @@ def start_server(ns_host, ns_port=8888, proxy_name='qrng', **kwargs):
     daemon = Pyro4.Daemon(host=host)
 
     # if you want to use a different firmware image or set some initialization options, you would do that here
-    qrng = QRNG(bitfile=kwargs.get('bitfile', None),download=True)
+    device = SOC(bitfile=kwargs.get('bitfile', None),download=True)
     print("initialized QICK")
 
     # register the QickSoc in the daemon (so the daemon exposes the QickSoc over Pyro4)
     # and in the nameserver (so the client can find the QickSoc)
-    ns.register(proxy_name, daemon.register(qrng))
+    ns.register(proxy_name, daemon.register(device))
 
     # register in the daemon all the objects we expose as properties of the QickSoc
     # we don't register them in the nameserver, since they are only meant to be accessed through the QickSoc proxy
