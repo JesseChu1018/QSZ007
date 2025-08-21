@@ -45,7 +45,6 @@ class SOC(Overlay):
         print("init_socip")
 
     def __getitem__(self, key):
-        super().__getitem__(key)
         return self._cfg[key]
 
     def __setitem__(self, key, val):
