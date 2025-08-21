@@ -137,7 +137,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
 
     def configure(self):
         super().configure()
-        half_period = int(np.round(150 * 1000 * self.cfg['f_fabric']))  # 150ms
+        half_period = int(np.round(150 * 1000 * self['dac']['f_fabric']))  # 150ms
         # Default registers.
         self.start = 0
         self.tx_period = half_period * 2  # 300ms
