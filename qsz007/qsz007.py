@@ -35,7 +35,7 @@ class SOC(Overlay):
 
         self.__config_rfdc() # get on used DAC and ADC tiles and their reference clocks
         print("config_rfdc")
-        self.__config_clocks(download) # set the clocks if clocks are not locked
+        # self.__config_clocks(download) # set the clocks if clocks are not locked
         print("config_clocks")
 
         self.metadata = Metadata(self)
