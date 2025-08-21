@@ -30,8 +30,8 @@ class AbsDacDriver(SocIp):
         for p in ['fs', 'fs_mult', 'fs_div', 'interpolation', 'f_fabric']:
             self['dac'][p] = self.soc['dacs'][self['dac']['chname']][p]
         # interpolation reduces the DDS range
-        self['dac']['f_dds'] = self['fs'] / self['dac']['interpolation']
-        self['dac']['fdds_div'] = self['fs_div'] * self['dac']['interpolation']
+        self['dac']['f_dds'] = self['dac']['fs'] / self['dac']['interpolation']
+        self['dac']['fdds_div'] = self['dac']['fs_div'] * self['dac']['interpolation']
         
         self['dac']['maxv'] = self.DAC_MAXV
         self['dac']['maxv_scale'] = self.DAC_MAXV_SCALE
@@ -60,8 +60,8 @@ class AbsAdcDriver(SocIp):
         for p in ['fs', 'fs_mult', 'fs_div', 'decimation', 'f_fabric']:
             self['adc'][p] = self.soc['adcs'][self['adc']['chname']][p]
         # interpolation reduces the DDS range
-        self['adc']['f_dds'] = self['fs'] / self['adc']['decimation']
-        self['adc']['fdds_div'] = self['fs_div'] * self['adc']['decimation']
+        self['adc']['f_dds'] = self['adc']['fs'] / self['adc']['decimation']
+        self['adc']['fdds_div'] = self['adc']['fs_div'] * self['adc']['decimation']
 
     def configure_connections(self, soc):
         super().configure_connections(soc)
