@@ -22,10 +22,12 @@ class SOC(Overlay):
         """
         This method constructs the QSZ007 object.
         """
+        print("Initializing QICK SOC")
         if bitfile == None:
             filepath = str(Path(__file__).parent/'qsz007.bit')
         else:
             filepath = str(Path(__file__).parent/bitfile)
+        print(f"Loading bitfile: {filepath}")
         super().__init__(filepath, ignore_version=ignore_version, download=False)
         # Initialize the configuration
         self._cfg = {}
