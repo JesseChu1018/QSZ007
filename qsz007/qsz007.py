@@ -49,7 +49,6 @@ class SOC(Overlay):
         return self._cfg[key]
 
     def __setitem__(self, key, val):
-        super().__setitem__(key, val)
         self._cfg[key] = val
 
     def __config_rfdc(self):
