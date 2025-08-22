@@ -223,7 +223,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
 
         total_data = []
         for i in range(tri_cnt):
-            time_data = self.dma_time_buf[i] / (self['adc']['f_fabric'] * 1000) # Convert to ms
+            time_data = self.dma_time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
             
             dc_data = self.dma_dc_buf[i * self.INTERPOLATION:(i + 1) * self.INTERPOLATION]
             dc_data = np.frombuffer(dc_data, dtype=np.int16)
