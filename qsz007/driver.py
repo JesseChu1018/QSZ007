@@ -163,6 +163,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
 
         rise_clk = int(np.round(150 * 1000 * self['dac']['f_fabric']))
         fall_clk = int(np.round(fall_time_ms * 1000 * self['dac']['f_fabric']))
+        self.tx_tag_fall = rise_clk
         self.tx_period = rise_clk + fall_clk
         self.tx_ratio_rise = int(np.round((self.DAC_MAXV * max_scal * 2**16) / rise_clk)) # Positive for rise
         self.tx_ratio_fall = (int(np.round((self.DAC_MAXV * max_scal * 2**16) / fall_clk)) * -1) # Negative for fall
