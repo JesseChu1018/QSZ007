@@ -237,7 +237,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             graphy_data = self.dma_graphy_buf[start_index:end_index]
             graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
             
-            data = {'time': time_data, 'dc': dc_data.average(), 'graphy': graphy_data.copy()}
+            data = {'time': time_data, 'dc': dc_data.mean(), 'graphy': graphy_data.copy()}
             total_data.append(data)
         
         return total_data
@@ -306,7 +306,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             try:
                 while self.par_queue.empty():
                     time.sleep(0.01)  # Wait for a new cycle request
-                print("Starting tomography cycle")
                 cycle_target = self.par_queue.get(block=True)
                 ctcle_cnt = 0
                 self.start = 1
@@ -315,14 +314,11 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                         break
                     error, cycle = self.get_state()
                     if cycle != (ctcle_cnt & 0xF):
-                        print("Cycle %d, expected %d" % (cycle, ctcle_cnt & 0xF))
                         if error:
                             self.error_queue.put("Error in tomography state.")
                             break
                         else:
                             data = self.get_data()  # Get the data for the previous cycle
-                            if data == []:
-                                print("No data received for cycle %d" % ctcle_cnt)
                             self.data_queue.put(data)
                         ctcle_cnt += 1
                     else:
@@ -332,4 +328,3 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             finally:
                 self.start = 0
                 self.done_flag.set()
-                print("Tomography finished")
