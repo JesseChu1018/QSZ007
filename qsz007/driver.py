@@ -280,8 +280,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             try:
                 data = self.data_queue.get(block=True, timeout=timeout)
                 # if we stopped the readout while we were waiting for data, break out and return
-                if self.done_flag.is_set():
-                    print("tomography done")
                 if self.stop_flag.is_set():
                     break
                 new_data.append(data)
@@ -316,6 +314,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                         break
                     error, cycle = self.get_state()
                     if cycle != (ctcle_cnt & 0xF):
+                        print("Cycle %d, expected %d" % (cycle, ctcle_cnt & 0xF))
                         if error:
                             self.error_queue.put("Error in tomography state.")
                             break
@@ -332,3 +331,4 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             finally:
                 self.start = 0
                 self.done_flag.set()
+                print("Tomography finished")
