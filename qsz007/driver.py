@@ -260,6 +260,14 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         if not self.data_queue.empty():
             self.poll_data(totaltime=-1, timeout=0.1)
 
+        self.dma_time.recvchannel.stop()
+        self.dma_dc.recvchannel.stop()
+        self.dma_graphy.recvchannel.stop()
+        
+        self.dma_time.recvchannel.start()
+        self.dma_dc.recvchannel.start()
+        self.dma_graphy.recvchannel.start()
+
         self.done_flag.clear()
         self.par_queue.put(cycle)
 
