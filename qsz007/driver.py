@@ -241,6 +241,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 else:
                     start_clk += self.graphy_clk
                 start_index = start_clk * self.INTERPOLATION + residue_clk
+                print(f"start_clk: {start_clk}, delta_clk: {delta_clk}, now_quotient: {now_quotient}, pre_quotient: {pre_quotient}, residue_clk: {residue_clk}, start_index: {start_index}")
             else:
                 start_index = residue_clk
             end_index = start_index + 1000
