@@ -234,14 +234,11 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             pre_quotient = now_quotient if i > 0 else 0
             now_quotient = self.dma_time_buf[i] // self.INTERPOLATION
             residue_clk = self.dma_time_buf[i] % self.INTERPOLATION
-            if i > 0:
-                delta_clk = now_quotient - pre_quotient
-                if delta_clk > self.graphy_clk:
-                    delta_clk = self.graphy_clk
-                start_clk += delta_clk
-                start_index = start_clk * self.INTERPOLATION + residue_clk
-            else:
-                start_index = residue_clk
+            delta_clk = (now_quotient - pre_quotient) if i > 0 else 0
+            if delta_clk > self.graphy_clk:
+                delta_clk = self.graphy_clk
+            start_clk += delta_clk
+            start_index = start_clk * self.INTERPOLATION + residue_clk
             end_index = start_index + 1000
             graphy_data = self.dma_graphy_buf[start_index:end_index]
             graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
