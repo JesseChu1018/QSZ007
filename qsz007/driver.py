@@ -191,7 +191,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         if not (0 <= threshold <= 1):
             raise RuntimeError("Threshold must be between 0 and 1.")
 
-        print(f"Setting RX threshold: {self.DAC_MAXV * threshold}")
         self.rx_threshold = int(np.round(self.DAC_MAXV * threshold))
 
     def get_state(self):
@@ -237,10 +236,9 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             residue_clk = self.dma_time_buf[i] % self.INTERPOLATION
             if i > 0:
                 delta_clk = now_quotient - pre_quotient
-                if delta_clk < self.graphy_clk:
-                    start_clk += delta_clk
-                else:
-                    start_clk += self.graphy_clk
+                if delta_clk > self.graphy_clk:
+                    delta_clk = self.graphy_clk
+                start_clk += delta_clk
                 start_index = start_clk * self.INTERPOLATION + residue_clk
             else:
                 start_index = residue_clk
@@ -270,14 +268,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
 
         if not self.data_queue.empty():
             self.poll_data(totaltime=-1, timeout=0.1)
-
-        # self.dma_time.recvchannel.stop()
-        # self.dma_dc.recvchannel.stop()
-        # self.dma_graphy.recvchannel.stop()
-
-        # self.dma_time.recvchannel.start()
-        # self.dma_dc.recvchannel.start()
-        # self.dma_graphy.recvchannel.start()
 
         self.done_flag.clear()
         self.par_queue.put(cycle)
