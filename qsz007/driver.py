@@ -114,6 +114,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.INTERPOLATION = int(description['parameters']['INTERPOLATION'])
         self.TRIGGER_LIMIT = int(description['parameters']['TRIGGER_LIMIT'])
 
+        self.graphy_clk = (1024 // self.INTERPOLATION)
+
         self.dma_time_buf = allocate(shape=(self.TRIGGER_LIMIT+1), dtype=np.uint32)
         self.dma_dc_buf = allocate(shape=(self.TRIGGER_LIMIT+1) * self.INTERPOLATION, dtype=np.int16)
         self.dma_graphy_buf = allocate(shape=(self.TRIGGER_LIMIT * 1024) + self.INTERPOLATION, dtype=np.int16)
@@ -221,24 +223,30 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.dma_dc.recvchannel.wait()
         self.dma_graphy.recvchannel.wait()
 
+        start_clk = 0
         total_data = []
         for i in range(tri_cnt):
-            residue_clk = self.dma_time_buf[i] % self.INTERPOLATION
             time_data = self.dma_time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
             
             dc_data = self.dma_dc_buf[i * self.INTERPOLATION:(i + 1) * self.INTERPOLATION]
             dc_data = np.frombuffer(dc_data, dtype=np.int16)
             
-            start_index = i * 1024
+            pre_quotient = now_quotient if i > 0 else 0
+            now_quotient = self.dma_time_buf[i] // self.INTERPOLATION
+            residue_clk = self.dma_time_buf[i] % self.INTERPOLATION
             if i > 0:
-                delta_time = self.dma_time_buf[i] - self.dma_time_buf[i - 1]
-                if delta_time < 1024:
-                    start_index -= (1024 - delta_time)
-            start_index += residue_clk
+                delta_clk = now_quotient - pre_quotient
+                if delta_clk < self.graphy_clk:
+                    start_clk += (self.graphy_clk - delta_clk)
+                else:
+                    start_clk += self.graphy_clk
+                start_index = start_clk * self.INTERPOLATION + residue_clk
+            else:
+                start_index = residue_clk
             end_index = start_index + 1000
             graphy_data = self.dma_graphy_buf[start_index:end_index]
             graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
-            
+
             data = {'time': time_data, 'dc': dc_data.mean(), 'graphy': graphy_data.copy()}
             total_data.append(data)
         
