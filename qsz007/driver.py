@@ -281,7 +281,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         while (totaltime < 0) or (time.time() < time_end):
             try:
                 e = self.error_queue.get(block=False)
-                raise RuntimeError(e)
+                return False, e
             except Empty:
                 pass
             try:
@@ -292,7 +292,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 new_data.append(data)
             except Empty:
                 break
-        return new_data
+        return True, new_data
 
     def __start_thread(self):
         self.stop_flag = Event()

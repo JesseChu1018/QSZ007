@@ -205,60 +205,60 @@ class SOC(Overlay):
         This method sets the waveform parameters for the specified channel.
         """
         if ch > len(self.socip) - 1 or ch < 0:
-            raise ValueError(f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
+            return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
         if not isinstance(self.socip[ch], AxisTomography):
-            raise TypeError(f"Channel {ch} is not a valid AxisTomography instance.")
-        
+            return False, (f"Channel {ch} is not a valid AxisTomography instance.")
+
         self.socip[ch].set_waveform(fall_time_ms, max_scal)
         
-        return True
+        return True, None
 
     def set_ttl_tag(self, ch:int=0, ttl_bit:int=0, time_ms:int=150):
         """
         This method sets a TTL tag for the specified channel.
         """
         if ch > len(self.socip) - 1 or ch < 0:
-            raise ValueError(f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
+            return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
         if not isinstance(self.socip[ch], AxisTomography):
-            raise TypeError(f"Channel {ch} is not a valid AxisTomography instance.")
-        
+            return False, (f"Channel {ch} is not a valid AxisTomography instance.")
+
         self.socip[ch].set_ttl_tag(ttl_bit, time_ms)
         
-        return True
+        return True, None
     
     def set_threshold(self, ch:int=0, threshold:float=0.5):
         """
         This method sets the ADC threshold for the specified channel.
         """
         if ch > len(self.socip) - 1 or ch < 0:
-            raise ValueError(f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
+            return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
         if not isinstance(self.socip[ch], AxisTomography):
-            raise TypeError(f"Channel {ch} is not a valid AxisTomography instance.")
-        
+            return False, (f"Channel {ch} is not a valid AxisTomography instance.")
+
         self.socip[ch].set_threshold(threshold)
         
-        return True
+        return True, None
     
     def start_tomography(self, ch:int=0, cycle:int=1):
         """
         This method starts the tomography process for the specified channel.
         """
         if ch > len(self.socip) - 1 or ch < 0:
-            raise ValueError(f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
+            return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
         if not isinstance(self.socip[ch], AxisTomography):
-            raise TypeError(f"Channel {ch} is not a valid AxisTomography instance.")
+            return False, (f"Channel {ch} is not a valid AxisTomography instance.")
         
         self.socip[ch].start_tomography(cycle)
         
-        return True
+        return True, None
     
     def poll_data(self, ch:int=0, totaltime=0.5, timeout=1):
         """
         This method polls data from the specified channel.
         """
         if ch > len(self.socip) - 1 or ch < 0:
-            raise ValueError(f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
+            return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
         if not isinstance(self.socip[ch], AxisTomography):
-            raise TypeError(f"Channel {ch} is not a valid AxisTomography instance.")
-        
+            return False, (f"Channel {ch} is not a valid AxisTomography instance.")
+
         return self.socip[ch].poll_data(totaltime, timeout)
