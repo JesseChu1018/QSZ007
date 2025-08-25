@@ -322,7 +322,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                         break
                     error, cycle = self.get_state()
                     if cycle != (ctcle_cnt & 0xF):
-                        print(f"Waiting for cycle {ctcle_cnt}, current cycle {cycle}\n")
                         if error:
                             self.error_queue.put("Error in tomography state.")
                             break
