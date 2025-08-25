@@ -223,6 +223,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
 
         total_data = []
         for i in range(tri_cnt):
+            residue_clk = self.dma_time_buf[i] % self.INTERPOLATION
             time_data = self.dma_time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
             
             dc_data = self.dma_dc_buf[i * self.INTERPOLATION:(i + 1) * self.INTERPOLATION]
@@ -233,7 +234,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 delta_time = self.dma_time_buf[i] - self.dma_time_buf[i - 1]
                 if delta_time < 1024:
                     start_index -= (1024 - delta_time)
-            end_index = start_index + 1024
+            start_index += residue_clk
+            end_index = start_index + 1000
             graphy_data = self.dma_graphy_buf[start_index:end_index]
             graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
             
