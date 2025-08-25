@@ -190,7 +190,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         """
         if not (0 <= threshold <= 1):
             raise RuntimeError("Threshold must be between 0 and 1.")
-        
+
+        print(f"Setting RX threshold: {self.DAC_MAXV * threshold}")
         self.rx_threshold = int(np.round(self.DAC_MAXV * threshold))
 
     def get_state(self):
