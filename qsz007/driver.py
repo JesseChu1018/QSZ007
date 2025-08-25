@@ -237,7 +237,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             if i > 0:
                 delta_clk = now_quotient - pre_quotient
                 if delta_clk < self.graphy_clk:
-                    start_clk += (self.graphy_clk - delta_clk)
+                    start_clk += delta_clk
                 else:
                     start_clk += self.graphy_clk
                 start_index = start_clk * self.INTERPOLATION + residue_clk
