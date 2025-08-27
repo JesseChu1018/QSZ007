@@ -37,6 +37,11 @@ class SOC(Overlay):
 
         self.__init_socip()
 
+        if download:
+            self.__avtt_set(voltage="2.5V")
+            time.sleep(0.5)
+            self.__balun_init()
+
     def __getitem__(self, key):
         return self._cfg[key]
 
@@ -177,6 +182,37 @@ class SOC(Overlay):
         for i, ip in enumerate(self.socip):
             ip.configure()
         
+    def __balun_init(self):
+        gpio = self.axi_gpio_0.channel1
+        gpio.trimask = 0xFFFFFFFE
+        gpio.write(0x01, 0xffffffff)
+
+    def __avtt_set(self, voltage:str='3.0V'):
+        i2c = self.axi_iic_0 
+        AVTT_SEL_BIT = 0x01 << 3
+        WR_OUTPUT_PORT0 = [0x02]
+        WR_CONFIG_PORT0 = [0x06]
+        RD_OUTPUT_PORT0 = b'\x00'
+        RD_CONFIG_PORT0 = b'\x00'
+        i2c.send(address=0x20, data=WR_OUTPUT_PORT0, length=len(WR_OUTPUT_PORT0), option=1)
+        i2c.receive(address=0x20, data=RD_OUTPUT_PORT0, length=len(RD_OUTPUT_PORT0), option=0)
+        i2c.wait()
+        i2c.send(address=0x20, data=WR_CONFIG_PORT0, length=len(WR_CONFIG_PORT0), option=1)
+        i2c.receive(address=0x20, data=RD_CONFIG_PORT0, length=len(RD_CONFIG_PORT0), option=0)
+        i2c.wait()
+        if voltage == '3.0V':
+            WR_OUTPUT_PORT0.append(RD_OUTPUT_PORT0[0] | AVTT_SEL_BIT)
+            WR_CONFIG_PORT0.append(RD_CONFIG_PORT0[0] | AVTT_SEL_BIT)
+        elif voltage == '2.5V':
+            WR_OUTPUT_PORT0.append(RD_OUTPUT_PORT0[0] & (~AVTT_SEL_BIT))
+            WR_CONFIG_PORT0.append(RD_CONFIG_PORT0[0] & (~AVTT_SEL_BIT))
+        else:
+            raise ValueError("Invalid voltage setting. Use '3.3V' or '2.5V'.")
+        i2c.send(address=0x20, data=WR_OUTPUT_PORT0, length=len(WR_OUTPUT_PORT0), option=0)
+        i2c.wait()
+        i2c.send(address=0x20, data=WR_CONFIG_PORT0, length=len(WR_CONFIG_PORT0), option=0)
+        i2c.wait()
+
     def upload_file(self, file_name:str, file:bytes):
         """
         This method uploads the bitstream to the FPGA.
