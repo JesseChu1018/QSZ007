@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Wed Aug 27 11:18:34 2025" VIVADOVERSION="2021.2.1">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Wed Aug 27 15:06:34 2025" VIVADOVERSION="2021.2.1">
 
   <SYSTEMINFO ARCH="zynquplusRFSOC" BOARD="xilinx.com:zcu216:part0:2.0" DEVICE="xczu49dr" NAME="system" PACKAGE="ffvf1760" SPEEDGRADE="-2"/>
 
@@ -22,6 +22,51 @@
     <PORT CLKFREQUENCY="100000000" DIR="I" NAME="adc2_clk_0_clk_p" SIGIS="clk" SIGNAME="usp_rf_data_converter_0_adc2_clk_p">
       <CONNECTIONS>
         <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="adc2_clk_p"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" LEFT="0" NAME="GPIO_0_tri_i" RIGHT="0" SIGIS="undef" SIGNAME="axi_gpio_0_gpio_io_i">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_gpio_0" PORT="gpio_io_i"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" LEFT="0" NAME="GPIO_0_tri_o" RIGHT="0" SIGIS="undef" SIGNAME="axi_gpio_0_gpio_io_o">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_gpio_0" PORT="gpio_io_o"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" LEFT="0" NAME="GPIO_0_tri_t" RIGHT="0" SIGIS="undef" SIGNAME="axi_gpio_0_gpio_io_t">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_gpio_0" PORT="gpio_io_t"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="IIC_0_scl_i" SIGIS="undef" SIGNAME="axi_iic_0_scl_i">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_iic_0" PORT="scl_i"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="IIC_0_scl_o" SIGIS="undef" SIGNAME="axi_iic_0_scl_o">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_iic_0" PORT="scl_o"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="IIC_0_scl_t" SIGIS="undef" SIGNAME="axi_iic_0_scl_t">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_iic_0" PORT="scl_t"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="IIC_0_sda_i" SIGIS="undef" SIGNAME="axi_iic_0_sda_i">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_iic_0" PORT="sda_i"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="IIC_0_sda_o" SIGIS="undef" SIGNAME="axi_iic_0_sda_o">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_iic_0" PORT="sda_o"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="IIC_0_sda_t" SIGIS="undef" SIGNAME="axi_iic_0_sda_t">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="axi_iic_0" PORT="sda_t"/>
       </CONNECTIONS>
     </PORT>
     <PORT CLKFREQUENCY="100000000" DIR="I" NAME="dac2_clk_0_clk_n" SIGIS="clk" SIGNAME="usp_rf_data_converter_0_dac2_clk_n">
@@ -122,51 +167,6 @@
     <PORT DIR="I" NAME="vin22_0_v_p" SIGIS="undef" SIGNAME="usp_rf_data_converter_0_vin22_p">
       <CONNECTIONS>
         <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="vin22_p"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="I" NAME="IIC_0_scl_i" SIGIS="undef" SIGNAME="axi_iic_0_scl_i">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_iic_0" PORT="scl_i"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="O" NAME="IIC_0_scl_o" SIGIS="undef" SIGNAME="axi_iic_0_scl_o">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_iic_0" PORT="scl_o"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="O" NAME="IIC_0_scl_t" SIGIS="undef" SIGNAME="axi_iic_0_scl_t">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_iic_0" PORT="scl_t"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="I" NAME="IIC_0_sda_i" SIGIS="undef" SIGNAME="axi_iic_0_sda_i">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_iic_0" PORT="sda_i"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="O" NAME="IIC_0_sda_o" SIGIS="undef" SIGNAME="axi_iic_0_sda_o">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_iic_0" PORT="sda_o"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="O" NAME="IIC_0_sda_t" SIGIS="undef" SIGNAME="axi_iic_0_sda_t">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_iic_0" PORT="sda_t"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="I" LEFT="0" NAME="GPIO_0_tri_i" RIGHT="0" SIGIS="undef" SIGNAME="axi_gpio_0_gpio_io_i">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_gpio_0" PORT="gpio_io_i"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="O" LEFT="0" NAME="GPIO_0_tri_o" RIGHT="0" SIGIS="undef" SIGNAME="axi_gpio_0_gpio_io_o">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_gpio_0" PORT="gpio_io_o"/>
-      </CONNECTIONS>
-    </PORT>
-    <PORT DIR="O" LEFT="0" NAME="GPIO_0_tri_t" RIGHT="0" SIGIS="undef" SIGNAME="axi_gpio_0_gpio_io_t">
-      <CONNECTIONS>
-        <CONNECTION INSTANCE="axi_gpio_0" PORT="gpio_io_t"/>
       </CONNECTIONS>
     </PORT>
   </EXTERNALPORTS>
@@ -14943,7 +14943,7 @@
         <PARAMETER NAME="EN_BRAM_DRC" VALUE="TRUE"/>
         <PARAMETER NAME="ALL_PROBE_SAME_MU" VALUE="TRUE"/>
         <PARAMETER NAME="ALL_PROBE_SAME_MU_CNT" VALUE="1"/>
-        <PARAMETER NAME="C_NUM_MONITOR_SLOTS" VALUE="1"/>
+        <PARAMETER NAME="C_NUM_MONITOR_SLOTS" VALUE="3"/>
         <PARAMETER NAME="C_SLOT_0_AXI_ARUSER_WIDTH" VALUE="1"/>
         <PARAMETER NAME="C_SLOT_0_AXI_RUSER_WIDTH" VALUE="1"/>
         <PARAMETER NAME="C_SLOT_0_AXI_AWUSER_WIDTH" VALUE="1"/>
@@ -14971,8 +14971,8 @@
         <PARAMETER NAME="C_SLOT_1_AXIS_TUSER_WIDTH" VALUE="AUTO"/>
         <PARAMETER NAME="C_SLOT_1_AXIS_TDEST_WIDTH" VALUE="AUTO"/>
         <PARAMETER NAME="C_SLOT_0_INTF_TYPE" VALUE="xilinx.com:interface:aximm_rtl:1.0"/>
-        <PARAMETER NAME="C_SLOT_1_INTF_TYPE" VALUE="xilinx.com:interface:aximm_rtl:1.0"/>
-        <PARAMETER NAME="C_SLOT_2_INTF_TYPE" VALUE="xilinx.com:interface:aximm_rtl:1.0"/>
+        <PARAMETER NAME="C_SLOT_1_INTF_TYPE" VALUE="xilinx.com:interface:gpio_rtl:1.0"/>
+        <PARAMETER NAME="C_SLOT_2_INTF_TYPE" VALUE="xilinx.com:interface:iic_rtl:1.0"/>
         <PARAMETER NAME="C_SLOT_3_INTF_TYPE" VALUE="xilinx.com:interface:aximm_rtl:1.0"/>
         <PARAMETER NAME="C_SLOT_4_INTF_TYPE" VALUE="xilinx.com:interface:aximm_rtl:1.0"/>
         <PARAMETER NAME="C_SLOT_5_INTF_TYPE" VALUE="xilinx.com:interface:aximm_rtl:1.0"/>
@@ -15203,6 +15203,15 @@
             <CONNECTION INSTANCE="rst_100M" PORT="peripheral_aresetn"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="I" LEFT="0" NAME="SLOT_1_GPIO_tri_t" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="0" NAME="SLOT_1_GPIO_tri_o" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="0" NAME="SLOT_1_GPIO_tri_i" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" NAME="SLOT_2_IIC_scl_i" SIGIS="undef"/>
+        <PORT DIR="I" NAME="SLOT_2_IIC_scl_o" SIGIS="undef"/>
+        <PORT DIR="I" NAME="SLOT_2_IIC_scl_t" SIGIS="undef"/>
+        <PORT DIR="I" NAME="SLOT_2_IIC_sda_i" SIGIS="undef"/>
+        <PORT DIR="I" NAME="SLOT_2_IIC_sda_o" SIGIS="undef"/>
+        <PORT DIR="I" NAME="SLOT_2_IIC_sda_t" SIGIS="undef"/>
       </PORTS>
       <BUSINTERFACES>
         <BUSINTERFACE BUSNAME="tomography_0_smartconnect_0_M00_AXI" DATAWIDTH="32" NAME="SLOT_0_AXI" TYPE="MONITOR" VLNV="xilinx.com:interface:aximm:1.0">
@@ -15257,6 +15266,23 @@
             <PORTMAP LOGICAL="RRESP" PHYSICAL="SLOT_0_AXI_rresp"/>
             <PORTMAP LOGICAL="RVALID" PHYSICAL="SLOT_0_AXI_rvalid"/>
             <PORTMAP LOGICAL="RREADY" PHYSICAL="SLOT_0_AXI_rready"/>
+          </PORTMAPS>
+        </BUSINTERFACE>
+        <BUSINTERFACE BUSNAME="axi_gpio_0_GPIO" NAME="SLOT_1_GPIO" TYPE="MONITOR" VLNV="xilinx.com:interface:gpio:1.0">
+          <PORTMAPS>
+            <PORTMAP LOGICAL="TRI_T" PHYSICAL="SLOT_1_GPIO_tri_t"/>
+            <PORTMAP LOGICAL="TRI_O" PHYSICAL="SLOT_1_GPIO_tri_o"/>
+            <PORTMAP LOGICAL="TRI_I" PHYSICAL="SLOT_1_GPIO_tri_i"/>
+          </PORTMAPS>
+        </BUSINTERFACE>
+        <BUSINTERFACE BUSNAME="axi_iic_0_IIC" NAME="SLOT_2_IIC" TYPE="MONITOR" VLNV="xilinx.com:interface:iic:1.0">
+          <PORTMAPS>
+            <PORTMAP LOGICAL="SCL_I" PHYSICAL="SLOT_2_IIC_scl_i"/>
+            <PORTMAP LOGICAL="SCL_O" PHYSICAL="SLOT_2_IIC_scl_o"/>
+            <PORTMAP LOGICAL="SCL_T" PHYSICAL="SLOT_2_IIC_scl_t"/>
+            <PORTMAP LOGICAL="SDA_I" PHYSICAL="SLOT_2_IIC_sda_i"/>
+            <PORTMAP LOGICAL="SDA_O" PHYSICAL="SLOT_2_IIC_sda_o"/>
+            <PORTMAP LOGICAL="SDA_T" PHYSICAL="SLOT_2_IIC_sda_t"/>
           </PORTMAPS>
         </BUSINTERFACE>
       </BUSINTERFACES>
