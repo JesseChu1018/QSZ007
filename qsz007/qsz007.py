@@ -38,8 +38,8 @@ class SOC(Overlay):
         self.__init_socip()
 
         if download:
-            # self.avtt_set(voltage="2.5V")
-            # time.sleep(0.5)
+            self.__avtt_set(voltage="2.5V")
+            time.sleep(0.5)
             self.__balun_init()
 
     def __getitem__(self, key):
@@ -187,7 +187,7 @@ class SOC(Overlay):
         gpio.trimask = 0xFFFFFFFE
         gpio.write(0x01, 0xffffffff)
 
-    def avtt_set(self, voltage:str='3.0V'):
+    def __avtt_set(self, voltage:str='2.5V'):
         i2c = self.axi_iic_0 
         AVTT_SEL_BIT = 0x01 << 3
         WR_OUTPUT_PORT0 = [0x02]
@@ -196,6 +196,7 @@ class SOC(Overlay):
         i2c.send(address=0x20, data=WR_OUTPUT_PORT0, length=len(WR_OUTPUT_PORT0), option=1)
         i2c.receive(address=0x20, data=RD_DATA, length=len(RD_DATA), option=0)
         i2c.wait()
+        print(f"OUTPUT_PORT0: {RD_DATA[0]}")
         if voltage == '3.0V':
             WR_OUTPUT_PORT0.append(RD_DATA[0] | AVTT_SEL_BIT)
         elif voltage == '2.5V':
@@ -205,13 +206,13 @@ class SOC(Overlay):
         i2c.send(address=0x20, data=WR_CONFIG_PORT0, length=len(WR_CONFIG_PORT0), option=1)
         i2c.receive(address=0x20, data=RD_DATA, length=len(RD_DATA), option=0)
         i2c.wait()
+        print(f"CONFIG_PORT0: {RD_DATA[0]}")
         if voltage == '3.0V':
             WR_CONFIG_PORT0.append(RD_DATA[0] | AVTT_SEL_BIT)
         elif voltage == '2.5V':
             WR_CONFIG_PORT0.append(RD_DATA[0] & (~AVTT_SEL_BIT))
         else:
             raise ValueError("Invalid voltage setting. Use '3.3V' or '2.5V'.")
-        
         i2c.send(address=0x20, data=WR_OUTPUT_PORT0, length=len(WR_OUTPUT_PORT0), option=0)
         i2c.wait()
         i2c.send(address=0x20, data=WR_CONFIG_PORT0, length=len(WR_CONFIG_PORT0), option=0)
