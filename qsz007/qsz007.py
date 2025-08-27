@@ -38,8 +38,8 @@ class SOC(Overlay):
         self.__init_socip()
 
         if download:
-            self.avtt_set(voltage="2.5V")
-            time.sleep(0.5)
+            # self.avtt_set(voltage="2.5V")
+            # time.sleep(0.5)
             self.__balun_init()
 
     def __getitem__(self, key):
@@ -212,12 +212,10 @@ class SOC(Overlay):
         else:
             raise ValueError("Invalid voltage setting. Use '3.3V' or '2.5V'.")
         
-        print(f"WR_OUTPUT_PORT0: {WR_OUTPUT_PORT0}")
-        print(f"WR_CONFIG_PORT0: {WR_CONFIG_PORT0}")
-        # i2c.send(address=0x20, data=WR_OUTPUT_PORT0, length=len(WR_OUTPUT_PORT0), option=0)
-        # i2c.wait()
-        # i2c.send(address=0x20, data=WR_CONFIG_PORT0, length=len(WR_CONFIG_PORT0), option=0)
-        # i2c.wait()
+        i2c.send(address=0x20, data=WR_OUTPUT_PORT0, length=len(WR_OUTPUT_PORT0), option=0)
+        i2c.wait()
+        i2c.send(address=0x20, data=WR_CONFIG_PORT0, length=len(WR_CONFIG_PORT0), option=0)
+        i2c.wait()
 
     def upload_file(self, file_name:str, file:bytes):
         """
