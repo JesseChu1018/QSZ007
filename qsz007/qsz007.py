@@ -38,7 +38,7 @@ class SOC(Overlay):
         self.__init_socip()
 
         if download:
-            self.__avtt_set(voltage="2.5V")
+            self.avtt_set(voltage="2.5V")
             time.sleep(0.5)
             self.__balun_init()
 
@@ -187,7 +187,7 @@ class SOC(Overlay):
         gpio.trimask = 0xFFFFFFFE
         gpio.write(0x01, 0xffffffff)
 
-    def __avtt_set(self, voltage:str='2.5V'):
+    def avtt_set(self, voltage:str='2.5V'):
         i2c = self.axi_iic_0 
         AVTT_SEL_BIT = 0x01 << 3
         WR_OUTPUT_PORT0 = [0x02]
