@@ -1,7 +1,7 @@
 import Pyro4 
 import os
 
-class QRNGClient:
+class Client:
     def __init__(self):
         Pyro4.config.SERIALIZER = "pickle"
         Pyro4.config.PICKLE_PROTOCOL_VERSION=4
