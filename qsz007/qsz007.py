@@ -239,7 +239,21 @@ class SOC(Overlay):
             return False, traceback.format_exc()
         return True, None
         
-    def set_waveform(self, ch:int=0, fall_time_ms:int=10, max_scal:float=1.0):
+    def set_cycle(self, ch:int=0, cycle:int=1):
+        """
+        This method sets the cycle number for the specified channel.
+        """
+        if ch > len(self.socip) - 1 or ch < 0:
+            return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
+        if not isinstance(self.socip[ch], AxisTomography):
+            return False, (f"Channel {ch} is not a valid AxisTomography instance.")
+
+        self.socip[ch].set_cycle(cycle)
+        
+        return True, None
+    
+    def set_waveform(self, ch:int=0, rise_time_ms:int=150, fall_time_ms:int=50, 
+                     max_scal:float=1.0, trigger_rate_hz:int=100000):
         """
         This method sets the waveform parameters for the specified channel.
         """
@@ -247,21 +261,21 @@ class SOC(Overlay):
             return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
         if not isinstance(self.socip[ch], AxisTomography):
             return False, (f"Channel {ch} is not a valid AxisTomography instance.")
-
-        self.socip[ch].set_waveform(fall_time_ms, max_scal)
         
-        return True, None
+        self.socip[ch].set_waveform(rise_time_ms, fall_time_ms, max_scal, trigger_rate_hz)
 
-    def set_ttl_tag(self, ch:int=0, ttl_bit:int=0, time_ms:int=150):
+        return True, None
+    
+    def set_ttl(self, ch:int=0, ttl_bit:int=0, rise_ms:int=10, fall_ms:int=140):
         """
-        This method sets a TTL tag for the specified channel.
+        This method sets a TTL signal for the specified channel.
         """
         if ch > len(self.socip) - 1 or ch < 0:
             return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
         if not isinstance(self.socip[ch], AxisTomography):
             return False, (f"Channel {ch} is not a valid AxisTomography instance.")
 
-        self.socip[ch].set_ttl_tag(ttl_bit, time_ms)
+        self.socip[ch].set_ttl(ttl_bit, rise_ms, fall_ms)
         
         return True, None
     
