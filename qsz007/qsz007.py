@@ -12,10 +12,8 @@ from qsz007.ip import Metadata
 from qsz007.driver import AxisTomography
 
 class SOC(Overlay):
-    DAC_TILE_NUM = 4
-    ADC_TILE_NUM = 4
     """
-    This class defines the QRNG object.
+    This class defines the QSZ007 object.
     """
     
     def __init__(self, bitfile:str=None, ignore_version=True, download=False):

@@ -40,31 +40,50 @@ class Client:
         if not status:
             raise RuntimeError(error)
         
-    def set_waveform(self, ch:int=0, fall_time_ms:int=10, max_scal:float=1.0):
+    def set_cycle(self, ch:int=0, cycle:int=1):
+        """
+        This method sets the cycle for tomography measurement.
+        ch: int
+            The channel index, 0 or 1.
+        cycle: int
+            The number of cycles for the tomography measurement.
+        """
+        status, error = self.remote_obj.set_cycle(ch, cycle)
+        if not status:
+            raise RuntimeError(error)
+    
+    def set_waveform(self, ch:int=0, rise_time_ms:int=150, fall_time_ms:int=50, 
+                     max_scal:float=1.0, trigger_rate_hz:int=100000):
         """
         This method sets the waveform parameters.
         ch: int
             The channel index, 0 or 1.
+        rise_time_ms: int
+            The rise time of the waveform in milliseconds.
         fall_time_ms: int
             The fall time of the waveform in milliseconds.
         max_scal: float
             The maximum scale of the waveform.
+        trigger_rate_hz: int
+            The trigger rate in Hz.
         """
-        status, error = self.remote_obj.set_waveform(ch, fall_time_ms, max_scal)
+        status, error = self.remote_obj.set_waveform(ch, rise_time_ms, fall_time_ms, max_scal, trigger_rate_hz)
         if not status:
             raise RuntimeError(error)
         
-    def set_ttl_tag(self, ch:int=0, ttl_bit:int=0, time_ms:int=150):
+    def set_ttl(self, ch:int=0, ttl_bit:int=0, rise_ms:int=10, fall_ms:int=140):
         """
-        This method sets the TTL tag parameters.
+        This method sets the TTL parameters.
         ch: int
             The channel index, 0 or 1.
         ttl_bit: int
-            The TTL bit to be tagged, 0-7.
-        time_ms: int
-            The duration of the TTL tag in milliseconds.
+            The TTL bit to be set, 0-7.
+        rise_ms: int
+            The rise time of the TTL in milliseconds.
+        fall_ms: int
+            The fall time of the TTL in milliseconds.
         """
-        status, error = self.remote_obj.set_ttl_tag(ch, ttl_bit, time_ms)
+        status, error = self.remote_obj.set_ttl(ch, ttl_bit, rise_ms, fall_ms)
         if not status:
             raise RuntimeError(error)
         
