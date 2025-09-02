@@ -111,7 +111,7 @@ class Client:
         if not status:
             raise RuntimeError(error)
         
-    def poll_data(self, ch:int=0, totaltime=0.5, timeout=1):
+    def poll_data(self, ch:int=0, totaltime=0.5, timeout=0.1):
         """
         This method polls the data from the remote object.
         ch: int
