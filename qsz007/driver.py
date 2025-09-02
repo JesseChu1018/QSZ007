@@ -401,6 +401,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     if ctcle_cnt < cycle_target:
                         self.__data_acquire(ctcle_cnt, time_len, dc_len, graphy_len)
                     data = self.__data_process(ctcle_cnt - 1)
+                    print(f"Cycle {ctcle_cnt}/{cycle_target} done, acquired {len(data)} triggers.")
                     self.data_queue.put(data)
             except Exception as e:
                 self.error_queue.put(str(e))
