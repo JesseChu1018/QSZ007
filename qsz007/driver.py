@@ -117,7 +117,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
     DMA_DC_PORT = 'M1_ADC'
     DMA_GRAPHY_PORT = 'M2_ADC'
 
-    TRIGGER_LIMIT = 10000  # Maximum number of triggers per cycle.
+    TRIGGER_LIMIT = 15000  # Maximum number of triggers per cycle.
 
     def __init__(self, description):
         super().__init__(description)
@@ -125,14 +125,10 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.INTERPOLATION = int(description['parameters']['INTERPOLATION'])
 
         self.graphy_clk = (1024 // self.INTERPOLATION)
-
-        self.dma_time_buf = []
-        self.dma_dc_buf = []
-        self.dma_graphy_buf = []
-        for i in range(2):
-            self.dma_time_buf.append(allocate(shape=(self.TRIGGER_LIMIT), dtype=np.uint32))
-            self.dma_dc_buf.append(allocate(shape=self.TRIGGER_LIMIT * self.INTERPOLATION, dtype=np.int16))
-            self.dma_graphy_buf.append(allocate(shape=(self.TRIGGER_LIMIT * 1024), dtype=np.int16))
+        
+        self.dma_time_buf = allocate(shape=(self.TRIGGER_LIMIT), dtype=np.uint32)
+        self.dma_dc_buf = allocate(shape=self.TRIGGER_LIMIT * self.INTERPOLATION, dtype=np.int16)
+        self.dma_graphy_buf = allocate(shape=(self.TRIGGER_LIMIT * 1024), dtype=np.int16)
 
         self.__start_thread()
         
@@ -306,14 +302,13 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.thread = self.thread = Thread(target=self.__run_tomography, daemon=True)
         self.thread.start()
     
-    def __data_acquire(self, cycle_cnt, time_len, dc_len, graphy_len):
+    def __data_acquire(self, time_len, dc_len, graphy_len):
         """
         Start data acquisition for the given cycle count.
         """
-        buf_index = cycle_cnt % 2
-        time_buf = self.dma_time_buf[buf_index]
-        dc_buf = self.dma_dc_buf[buf_index]
-        graphy_buf = self.dma_graphy_buf[buf_index]
+        time_buf = self.dma_time_buf
+        dc_buf = self.dma_dc_buf
+        graphy_buf = self.dma_graphy_buf
 
         self.dma_time.recvchannel.transfer(time_buf, nbytes=int(time_len))
         self.dma_dc.recvchannel.transfer(dc_buf, nbytes=int(dc_len))
@@ -327,7 +322,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.dma_dc.recvchannel.wait()
         self.dma_graphy.recvchannel.wait()
 
-    def __data_process(self, cycle_cnt):
+    def __data_process(self):
         """
         Process the acquired data for the given cycle count.
         :return: List of dictionaries containing time, dc, and graphy data.
@@ -335,10 +330,9 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         tag_cnt = self.rx_tag_cnt
         data_cnt = self.rx_data_cnt * self.INTERPOLATION
 
-        buf_index = cycle_cnt % 2
-        time_buf = self.dma_time_buf[buf_index]
-        dc_buf = self.dma_dc_buf[buf_index]
-        graphy_buf = self.dma_graphy_buf[buf_index]
+        time_buf = self.dma_time_buf
+        dc_buf = self.dma_dc_buf
+        graphy_buf = self.dma_graphy_buf
         start_clk = 0
         total_data = []
         for i in range(tag_cnt):
@@ -379,13 +373,13 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 time_len = self.trigger_num * 4 # 4 bytes for each time point
                 dc_len = self.trigger_num * self.INTERPOLATION * 2 # 2 bytes for each DC point
                 graphy_len = self.trigger_num * 1024 * 2 # 2 bytes for each graphy point
-                self.__data_acquire(0, time_len, dc_len, graphy_len)
 
                 error = False
                 cycle = 0
                 ctcle_cnt = 0
                 self.start = 1
                 while ctcle_cnt < cycle_target:
+                    self.__data_acquire(time_len, dc_len, graphy_len)
                     self.__data_wait()
                     while cycle == (ctcle_cnt & 0xF):
                         if self.stop_flag.is_set():
@@ -397,14 +391,12 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     if error:
                         self.error_queue.put(f"Error occurred during tomography at cycle {ctcle_cnt}.")
                         # break # exit the cycle loop
-                    ctcle_cnt += 1
-                    if ctcle_cnt < cycle_target:
-                        self.__data_acquire(ctcle_cnt, time_len, dc_len, graphy_len)
                     t1 = time.time()
-                    data = self.__data_process(ctcle_cnt - 1)
+                    data = self.__data_process()
                     dt = time.time() - t1
                     print(f"Processed cycle {ctcle_cnt} in {dt:.3f} seconds.")
                     self.data_queue.put(data)
+                    ctcle_cnt += 1
             except Exception as e:
                 self.error_queue.put(str(e))
             finally:
