@@ -386,13 +386,16 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 cycle = 0
                 ctcle_cnt = 0
                 self.start = 1
+                print(f"Tomography started for {cycle_target} cycles.")
                 while ctcle_cnt < cycle_target:
                     self.__data_wait()
+                    print(f"Cycle {ctcle_cnt + 1}/{cycle_target} done.")
                     while cycle == (ctcle_cnt & 0xF):
                         if self.stop_flag.is_set():
                             break
                         # time.sleep(0.001)  # Wait for the next cycle
                         error, cycle = self.get_state()
+                    print(f"Cycle count: {cycle}, Error: {error}")
                     if self.stop_flag.is_set():
                         break
                     if error:
