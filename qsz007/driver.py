@@ -268,7 +268,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.set_cycle(cycle)
         self.par_queue.put(cycle)
 
-    def poll_data(self, totaltime=0.5, timeout=1):
+    def poll_data(self, totaltime=0.5, timeout=0.1):
         """
         Poll the tomography data.
         :param total_time: Total time to poll data in seconds.
@@ -374,6 +374,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             try:
                 while self.par_queue.empty():
                     time.sleep(0.01)  # Wait for a new cycle request
+                print(f"Starting tomography.")
                 cycle_target = self.par_queue.get(block=True)
                 
                 time_len = self.trigger_num * 4 # 4 bytes for each time point
