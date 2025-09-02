@@ -356,8 +356,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             start_clk += delta_clk
             start_index = start_clk * self.INTERPOLATION + residue_clk
             end_index = start_index + 1000
-            if end_index > data_cnt:
-                raise RuntimeError("Data index out of range.")
+            # if end_index > data_cnt:
+            #     raise RuntimeError("Data index out of range.")
             graphy_data = graphy_buf[start_index:end_index]
             graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
 
