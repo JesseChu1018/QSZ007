@@ -117,7 +117,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
     DMA_DC_PORT = 'M1_ADC'
     DMA_GRAPHY_PORT = 'M2_ADC'
 
-    TRIGGER_LIMIT = 20000  # Maximum number of triggers per cycle.
+    TRIGGER_LIMIT = 10000  # Maximum number of triggers per cycle.
 
     def __init__(self, description):
         super().__init__(description)
