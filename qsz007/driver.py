@@ -342,8 +342,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         start_clk = 0
         # total_data = []
         dict_data = {}
-        dict_data['time'] = (time_buf[:tag_cnt] / (self['adc']['fs'] * 1000)).tolist() # Convert to ms
-        dict_data['dc'] = np.frombuffer(dc_buf[:tag_cnt * self.INTERPOLATION], dtype=np.int16).reshape(tag_cnt, self.INTERPOLATION).mean(axis=1).tolist()
+        dict_data['time'] = time_buf[:tag_cnt].tolist() # Convert to ms
+        dict_data['dc'] = np.frombuffer(dc_buf[:tag_cnt * self.INTERPOLATION], dtype=np.int16).reshape(tag_cnt, self.INTERPOLATION).tolist()
         dict_data['graphy'] = np.frombuffer(graphy_buf[:data_cnt], dtype=np.int16).tolist()
         # for i in range(tag_cnt):
         #     time_data = time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
