@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Wed Aug 27 15:06:34 2025" VIVADOVERSION="2021.2.1">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Fri Aug 29 15:29:01 2025" VIVADOVERSION="2021.2.1">
 
   <SYSTEMINFO ARCH="zynquplusRFSOC" BOARD="xilinx.com:zcu216:part0:2.0" DEVICE="xczu49dr" NAME="system" PACKAGE="ffvf1760" SPEEDGRADE="-2"/>
 
@@ -15198,11 +15198,6 @@
         <PORT DIR="I" LEFT="1" NAME="SLOT_0_AXI_rresp" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" NAME="SLOT_0_AXI_rvalid" SIGIS="undef"/>
         <PORT DIR="I" NAME="SLOT_0_AXI_rready" SIGIS="undef"/>
-        <PORT DIR="I" NAME="resetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="rst_100M_peripheral_aresetn">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="rst_100M" PORT="peripheral_aresetn"/>
-          </CONNECTIONS>
-        </PORT>
         <PORT DIR="I" LEFT="0" NAME="SLOT_1_GPIO_tri_t" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" LEFT="0" NAME="SLOT_1_GPIO_tri_o" RIGHT="0" SIGIS="undef"/>
         <PORT DIR="I" LEFT="0" NAME="SLOT_1_GPIO_tri_i" RIGHT="0" SIGIS="undef"/>
@@ -15212,6 +15207,11 @@
         <PORT DIR="I" NAME="SLOT_2_IIC_sda_i" SIGIS="undef"/>
         <PORT DIR="I" NAME="SLOT_2_IIC_sda_o" SIGIS="undef"/>
         <PORT DIR="I" NAME="SLOT_2_IIC_sda_t" SIGIS="undef"/>
+        <PORT DIR="I" NAME="resetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="rst_100M_peripheral_aresetn">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="rst_100M" PORT="peripheral_aresetn"/>
+          </CONNECTIONS>
+        </PORT>
       </PORTS>
       <BUSINTERFACES>
         <BUSINTERFACE BUSNAME="tomography_0_smartconnect_0_M00_AXI" DATAWIDTH="32" NAME="SLOT_0_AXI" TYPE="MONITOR" VLNV="xilinx.com:interface:aximm:1.0">
@@ -18945,7 +18945,6 @@
       </ADDRESSBLOCKS>
       <PARAMETERS>
         <PARAMETER NAME="INTERPOLATION" VALUE="8"/>
-        <PARAMETER NAME="TRIGGER_LIMIT" VALUE="500"/>
         <PARAMETER NAME="ID_WIDTH" VALUE="1"/>
         <PARAMETER NAME="ADDR_WIDTH" VALUE="16"/>
         <PARAMETER NAME="DATA_WIDTH" VALUE="32"/>
@@ -19199,13 +19198,6 @@
         <PORT DIR="I" NAME="ADC_ARESETn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_0_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
             <CONNECTION INSTANCE="tomography_0_rst_adc_2" PORT="peripheral_aresetn"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" NAME="ADC_FIFO_RSTn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_0_axis_tomography_0_ADC_FIFO_RSTn">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="tomography_0_fifo_generator_1" PORT="s_aresetn"/>
-            <CONNECTION INSTANCE="tomography_0_fifo_generator_2" PORT="s_aresetn"/>
-            <CONNECTION INSTANCE="tomography_0_fifo_generator_0" PORT="s_aresetn"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="O" LEFT="7" NAME="TTL_OUT" RIGHT="0" SIGIS="undef" SIGNAME="tomography_0_axis_tomography_0_TTL_OUT">
@@ -19543,7 +19535,7 @@
         <PARAMETER NAME="C_APPLICATION_TYPE_WRCH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RACH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RDCH" VALUE="4"/>
-        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="1"/>
+        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="0"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WACH" VALUE="512x36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WDCH" VALUE="1kx36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WRCH" VALUE="512x36"/>
@@ -19756,7 +19748,7 @@
         <PARAMETER NAME="Empty_Threshold_Assert_Value_rdch" VALUE="1022"/>
         <PARAMETER NAME="axis_type" VALUE="FIFO"/>
         <PARAMETER NAME="FIFO_Implementation_axis" VALUE="Common_Clock_Block_RAM"/>
-        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Packet_FIFO"/>
+        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Data_FIFO"/>
         <PARAMETER NAME="Enable_ECC_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Sbit_Error_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Dbit_Error_axis" VALUE="false"/>
@@ -19797,9 +19789,9 @@
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="clk_adc1"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_0_axis_tomography_0_ADC_FIFO_RSTn">
+        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_0_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="tomography_0_axis_tomography_0" PORT="ADC_FIFO_RSTn"/>
+            <CONNECTION INSTANCE="tomography_0_rst_adc_2" PORT="peripheral_aresetn"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" NAME="s_axis_tvalid" SIGIS="undef" SIGNAME="tomography_0_axis_tomography_0_M0_ADC_TVALID">
@@ -20016,7 +20008,7 @@
         <PARAMETER NAME="C_APPLICATION_TYPE_WRCH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RACH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RDCH" VALUE="4"/>
-        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="1"/>
+        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="0"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WACH" VALUE="512x36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WDCH" VALUE="1kx36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WRCH" VALUE="512x36"/>
@@ -20229,7 +20221,7 @@
         <PARAMETER NAME="Empty_Threshold_Assert_Value_rdch" VALUE="1022"/>
         <PARAMETER NAME="axis_type" VALUE="FIFO"/>
         <PARAMETER NAME="FIFO_Implementation_axis" VALUE="Common_Clock_Block_RAM"/>
-        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Packet_FIFO"/>
+        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Data_FIFO"/>
         <PARAMETER NAME="Enable_ECC_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Sbit_Error_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Dbit_Error_axis" VALUE="false"/>
@@ -20270,9 +20262,9 @@
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="clk_adc1"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_0_axis_tomography_0_ADC_FIFO_RSTn">
+        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_0_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="tomography_0_axis_tomography_0" PORT="ADC_FIFO_RSTn"/>
+            <CONNECTION INSTANCE="tomography_0_rst_adc_2" PORT="peripheral_aresetn"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" NAME="s_axis_tvalid" SIGIS="undef" SIGNAME="tomography_0_axis_tomography_0_M1_ADC_TVALID">
@@ -20489,7 +20481,7 @@
         <PARAMETER NAME="C_APPLICATION_TYPE_WRCH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RACH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RDCH" VALUE="4"/>
-        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="1"/>
+        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="0"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WACH" VALUE="512x36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WDCH" VALUE="1kx36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WRCH" VALUE="512x36"/>
@@ -20702,7 +20694,7 @@
         <PARAMETER NAME="Empty_Threshold_Assert_Value_rdch" VALUE="1022"/>
         <PARAMETER NAME="axis_type" VALUE="FIFO"/>
         <PARAMETER NAME="FIFO_Implementation_axis" VALUE="Common_Clock_Block_RAM"/>
-        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Packet_FIFO"/>
+        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Data_FIFO"/>
         <PARAMETER NAME="Enable_ECC_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Sbit_Error_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Dbit_Error_axis" VALUE="false"/>
@@ -20743,9 +20735,9 @@
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="clk_adc1"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_0_axis_tomography_0_ADC_FIFO_RSTn">
+        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_0_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="tomography_0_axis_tomography_0" PORT="ADC_FIFO_RSTn"/>
+            <CONNECTION INSTANCE="tomography_0_rst_adc_2" PORT="peripheral_aresetn"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" NAME="s_axis_tvalid" SIGIS="undef" SIGNAME="tomography_0_axis_tomography_0_M2_ADC_TVALID">
@@ -20876,6 +20868,9 @@
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="m1_axis_aresetn"/>
             <CONNECTION INSTANCE="system_ila_0" PORT="resetn"/>
             <CONNECTION INSTANCE="tomography_0_axis_tomography_0" PORT="ADC_ARESETn"/>
+            <CONNECTION INSTANCE="tomography_0_fifo_generator_1" PORT="s_aresetn"/>
+            <CONNECTION INSTANCE="tomography_0_fifo_generator_2" PORT="s_aresetn"/>
+            <CONNECTION INSTANCE="tomography_0_fifo_generator_0" PORT="s_aresetn"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>
@@ -26070,7 +26065,6 @@
       </ADDRESSBLOCKS>
       <PARAMETERS>
         <PARAMETER NAME="INTERPOLATION" VALUE="8"/>
-        <PARAMETER NAME="TRIGGER_LIMIT" VALUE="500"/>
         <PARAMETER NAME="ID_WIDTH" VALUE="1"/>
         <PARAMETER NAME="ADDR_WIDTH" VALUE="16"/>
         <PARAMETER NAME="DATA_WIDTH" VALUE="32"/>
@@ -26324,13 +26318,6 @@
         <PORT DIR="I" NAME="ADC_ARESETn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_1_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
             <CONNECTION INSTANCE="tomography_1_rst_adc_2" PORT="peripheral_aresetn"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" NAME="ADC_FIFO_RSTn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_1_axis_tomography_0_ADC_FIFO_RSTn">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="tomography_1_fifo_generator_1" PORT="s_aresetn"/>
-            <CONNECTION INSTANCE="tomography_1_fifo_generator_2" PORT="s_aresetn"/>
-            <CONNECTION INSTANCE="tomography_1_fifo_generator_0" PORT="s_aresetn"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="O" LEFT="7" NAME="TTL_OUT" RIGHT="0" SIGIS="undef" SIGNAME="tomography_1_axis_tomography_0_TTL_OUT">
@@ -26667,7 +26654,7 @@
         <PARAMETER NAME="C_APPLICATION_TYPE_WRCH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RACH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RDCH" VALUE="4"/>
-        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="1"/>
+        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="0"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WACH" VALUE="512x36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WDCH" VALUE="1kx36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WRCH" VALUE="512x36"/>
@@ -26880,7 +26867,7 @@
         <PARAMETER NAME="Empty_Threshold_Assert_Value_rdch" VALUE="1022"/>
         <PARAMETER NAME="axis_type" VALUE="FIFO"/>
         <PARAMETER NAME="FIFO_Implementation_axis" VALUE="Common_Clock_Block_RAM"/>
-        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Packet_FIFO"/>
+        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Data_FIFO"/>
         <PARAMETER NAME="Enable_ECC_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Sbit_Error_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Dbit_Error_axis" VALUE="false"/>
@@ -26921,9 +26908,9 @@
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="clk_adc2"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_1_axis_tomography_0_ADC_FIFO_RSTn">
+        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_1_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="tomography_1_axis_tomography_0" PORT="ADC_FIFO_RSTn"/>
+            <CONNECTION INSTANCE="tomography_1_rst_adc_2" PORT="peripheral_aresetn"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" NAME="s_axis_tvalid" SIGIS="undef" SIGNAME="tomography_1_axis_tomography_0_M0_ADC_TVALID">
@@ -27140,7 +27127,7 @@
         <PARAMETER NAME="C_APPLICATION_TYPE_WRCH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RACH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RDCH" VALUE="4"/>
-        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="1"/>
+        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="0"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WACH" VALUE="512x36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WDCH" VALUE="1kx36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WRCH" VALUE="512x36"/>
@@ -27353,7 +27340,7 @@
         <PARAMETER NAME="Empty_Threshold_Assert_Value_rdch" VALUE="1022"/>
         <PARAMETER NAME="axis_type" VALUE="FIFO"/>
         <PARAMETER NAME="FIFO_Implementation_axis" VALUE="Common_Clock_Block_RAM"/>
-        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Packet_FIFO"/>
+        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Data_FIFO"/>
         <PARAMETER NAME="Enable_ECC_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Sbit_Error_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Dbit_Error_axis" VALUE="false"/>
@@ -27394,9 +27381,9 @@
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="clk_adc2"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_1_axis_tomography_0_ADC_FIFO_RSTn">
+        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_1_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="tomography_1_axis_tomography_0" PORT="ADC_FIFO_RSTn"/>
+            <CONNECTION INSTANCE="tomography_1_rst_adc_2" PORT="peripheral_aresetn"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" NAME="s_axis_tvalid" SIGIS="undef" SIGNAME="tomography_1_axis_tomography_0_M1_ADC_TVALID">
@@ -27613,7 +27600,7 @@
         <PARAMETER NAME="C_APPLICATION_TYPE_WRCH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RACH" VALUE="0"/>
         <PARAMETER NAME="C_APPLICATION_TYPE_RDCH" VALUE="4"/>
-        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="1"/>
+        <PARAMETER NAME="C_APPLICATION_TYPE_AXIS" VALUE="0"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WACH" VALUE="512x36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WDCH" VALUE="1kx36"/>
         <PARAMETER NAME="C_PRIM_FIFO_TYPE_WRCH" VALUE="512x36"/>
@@ -27826,7 +27813,7 @@
         <PARAMETER NAME="Empty_Threshold_Assert_Value_rdch" VALUE="1022"/>
         <PARAMETER NAME="axis_type" VALUE="FIFO"/>
         <PARAMETER NAME="FIFO_Implementation_axis" VALUE="Common_Clock_Block_RAM"/>
-        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Packet_FIFO"/>
+        <PARAMETER NAME="FIFO_Application_Type_axis" VALUE="Data_FIFO"/>
         <PARAMETER NAME="Enable_ECC_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Sbit_Error_axis" VALUE="false"/>
         <PARAMETER NAME="Inject_Dbit_Error_axis" VALUE="false"/>
@@ -27867,9 +27854,9 @@
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="clk_adc2"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_1_axis_tomography_0_ADC_FIFO_RSTn">
+        <PORT DIR="I" NAME="s_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="tomography_1_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="tomography_1_axis_tomography_0" PORT="ADC_FIFO_RSTn"/>
+            <CONNECTION INSTANCE="tomography_1_rst_adc_2" PORT="peripheral_aresetn"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" NAME="s_axis_tvalid" SIGIS="undef" SIGNAME="tomography_1_axis_tomography_0_M2_ADC_TVALID">
@@ -27999,6 +27986,9 @@
           <CONNECTIONS>
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="m2_axis_aresetn"/>
             <CONNECTION INSTANCE="tomography_1_axis_tomography_0" PORT="ADC_ARESETn"/>
+            <CONNECTION INSTANCE="tomography_1_fifo_generator_1" PORT="s_aresetn"/>
+            <CONNECTION INSTANCE="tomography_1_fifo_generator_2" PORT="s_aresetn"/>
+            <CONNECTION INSTANCE="tomography_1_fifo_generator_0" PORT="s_aresetn"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>
