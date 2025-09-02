@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Fri Aug 29 15:29:01 2025" VIVADOVERSION="2021.2.1">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Sep  2 11:00:32 2025" VIVADOVERSION="2021.2.1">
 
   <SYSTEMINFO ARCH="zynquplusRFSOC" BOARD="xilinx.com:zcu216:part0:2.0" DEVICE="xczu49dr" NAME="system" PACKAGE="ffvf1760" SPEEDGRADE="-2"/>
 
@@ -20867,10 +20867,10 @@
           <CONNECTIONS>
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="m1_axis_aresetn"/>
             <CONNECTION INSTANCE="system_ila_0" PORT="resetn"/>
-            <CONNECTION INSTANCE="tomography_0_axis_tomography_0" PORT="ADC_ARESETn"/>
             <CONNECTION INSTANCE="tomography_0_fifo_generator_1" PORT="s_aresetn"/>
             <CONNECTION INSTANCE="tomography_0_fifo_generator_2" PORT="s_aresetn"/>
             <CONNECTION INSTANCE="tomography_0_fifo_generator_0" PORT="s_aresetn"/>
+            <CONNECTION INSTANCE="tomography_0_axis_tomography_0" PORT="ADC_ARESETn"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>
@@ -27985,10 +27985,10 @@
         <PORT DIR="O" LEFT="0" NAME="peripheral_aresetn" POLARITY="ACTIVE_LOW" RIGHT="0" SIGIS="rst" SIGNAME="tomography_1_rst_adc_2_peripheral_aresetn">
           <CONNECTIONS>
             <CONNECTION INSTANCE="usp_rf_data_converter_0" PORT="m2_axis_aresetn"/>
-            <CONNECTION INSTANCE="tomography_1_axis_tomography_0" PORT="ADC_ARESETn"/>
             <CONNECTION INSTANCE="tomography_1_fifo_generator_1" PORT="s_aresetn"/>
             <CONNECTION INSTANCE="tomography_1_fifo_generator_2" PORT="s_aresetn"/>
             <CONNECTION INSTANCE="tomography_1_fifo_generator_0" PORT="s_aresetn"/>
+            <CONNECTION INSTANCE="tomography_1_axis_tomography_0" PORT="ADC_ARESETn"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>
