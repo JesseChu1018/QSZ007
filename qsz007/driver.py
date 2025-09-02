@@ -374,7 +374,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             try:
                 while self.par_queue.empty():
                     time.sleep(0.01)  # Wait for a new cycle request
-                print(f"Starting tomography.")
                 cycle_target = self.par_queue.get(block=True)
                 
                 time_len = self.trigger_num * 4 # 4 bytes for each time point
@@ -386,16 +385,13 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 cycle = 0
                 ctcle_cnt = 0
                 self.start = 1
-                print(f"Tomography started for {cycle_target} cycles.")
                 while ctcle_cnt < cycle_target:
                     self.__data_wait()
-                    print(f"Cycle {ctcle_cnt + 1}/{cycle_target} done.")
                     while cycle == (ctcle_cnt & 0xF):
                         if self.stop_flag.is_set():
                             break
                         # time.sleep(0.001)  # Wait for the next cycle
                         error, cycle = self.get_state()
-                    print(f"Cycle count: {cycle}, Error: {error}")
                     if self.stop_flag.is_set():
                         break
                     if error:
@@ -412,6 +408,5 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             except Exception as e:
                 self.error_queue.put(str(e))
             finally:
-                self.start = 0
                 self.done_flag.set()
                 print("Tomography finished.")
