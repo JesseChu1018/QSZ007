@@ -340,35 +340,31 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         dc_buf = self.dma_dc_buf[buf_index]
         graphy_buf = self.dma_graphy_buf[buf_index]
         start_clk = 0
-        # total_data = []
-        dict_data = {}
-        dict_data['time'] = time_buf[:tag_cnt].tolist() # Convert to ms
-        dict_data['dc'] = np.frombuffer(dc_buf[:tag_cnt * self.INTERPOLATION], dtype=np.int16).reshape(tag_cnt, self.INTERPOLATION).tolist()
-        dict_data['graphy'] = np.frombuffer(graphy_buf[:data_cnt], dtype=np.int16).tolist()
-        # for i in range(tag_cnt):
-        #     time_data = time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
+        total_data = []
+        for i in range(tag_cnt):
+            time_data = time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
             
-        #     dc_data = dc_buf[i * self.INTERPOLATION:(i + 1) * self.INTERPOLATION]
-        #     dc_data = np.frombuffer(dc_data, dtype=np.int16)
+            dc_data = dc_buf[i * self.INTERPOLATION:(i + 1) * self.INTERPOLATION]
+            dc_data = np.frombuffer(dc_data, dtype=np.int16)
             
-        #     pre_quotient = now_quotient if i > 0 else 0
-        #     now_quotient = time_buf[i] // self.INTERPOLATION
-        #     residue_clk = time_buf[i] % self.INTERPOLATION
-        #     delta_clk = (now_quotient - pre_quotient) if i > 0 else 0
-        #     if delta_clk > self.graphy_clk:
-        #         delta_clk = self.graphy_clk
-        #     start_clk += delta_clk
-        #     start_index = start_clk * self.INTERPOLATION + residue_clk
-        #     end_index = start_index + 1000
-        #     # if end_index > data_cnt:
-        #     #     raise RuntimeError("Data index out of range.")
-        #     graphy_data = graphy_buf[start_index:end_index]
-        #     graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
+            pre_quotient = now_quotient if i > 0 else 0
+            now_quotient = time_buf[i] // self.INTERPOLATION
+            residue_clk = time_buf[i] % self.INTERPOLATION
+            delta_clk = (now_quotient - pre_quotient) if i > 0 else 0
+            if delta_clk > self.graphy_clk:
+                delta_clk = self.graphy_clk
+            start_clk += delta_clk
+            start_index = start_clk * self.INTERPOLATION + residue_clk
+            end_index = start_index + 1000
+            if end_index > data_cnt:
+                raise RuntimeError("Data index out of range.")
+            graphy_data = graphy_buf[start_index:end_index]
+            graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
 
-        #     data = {'time': time_data, 'dc': dc_data.mean(), 'graphy': graphy_data.copy()}
-        #     total_data.append(data)
+            data = {'time': time_data, 'dc': dc_data.mean(), 'graphy': graphy_data.copy()}
+            total_data.append(data)
         
-        return dict_data
+        return total_data
     
     def __run_tomography(self):
         """
