@@ -176,6 +176,7 @@ class SOC(Overlay):
         for key, val in self.ip_dict.items():
             if val['driver'] == AxisTomography:
                 self.socip.append(getattr(self, key))
+                break  # only one AxisTomography instance
 
         for i, ip in enumerate(self.socip):
             ip.configure()
