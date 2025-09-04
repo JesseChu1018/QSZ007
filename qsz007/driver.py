@@ -420,6 +420,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     cycle_target -= cycle_reg
                     dt = time.time() - t_start
                     while (dt < (self.cycle_period * cycle_reg)) or (not self.data_queue.empty()):
+                        if self.stop_flag.is_set():
+                            break
                         time.sleep(0.001)
                         dt = time.time() - t_start
             except Exception as e:
