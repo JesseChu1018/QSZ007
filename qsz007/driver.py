@@ -405,10 +405,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     for i in range(cycle_reg):
                         self.__data_acquire(i, time_len, dc_len, graphy_len)
                         self.__data_wait()
-                        print(f"Data acquisition for buffer {i} complete.")
                         while cycle == i:
                             error, cycle = self.get_state()
-                        print(f"Cycle {i} complete with state: error={error}, cycle={cycle}.")
                         if error:
                             self.error_queue.put(f"Error occurred during tomography.")
                         tag_cnt.append(self.rx_tag_cnt)
@@ -420,7 +418,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                         self.data_queue.put(data)
                     cycle_target -= cycle_reg
                     dt = time.time() - t_start
-                    print(f"Cycle(s) processed in {dt:.3f} seconds.")
                     while (dt < (self.cycle_period * cycle_reg)) or (not self.data_queue.empty()):
                         time.sleep(0.001)
                         dt = time.time() - t_start
