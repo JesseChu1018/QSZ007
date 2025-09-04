@@ -348,7 +348,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         dc_buf = self.dma_dc_buf[buf_index]
         graphy_buf = self.dma_graphy_buf[buf_index]
         start_clk = 0
-        total_data = []
+        total_data = {'time': [], 'dc': [], 'graphy': []}
         for i in range(tag_cnt):
             time_data = time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
             
@@ -369,9 +369,10 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             graphy_data = graphy_buf[start_index:end_index]
             graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
 
-            data = {'time': time_data, 'dc': dc_data.mean(), 'graphy': graphy_data.copy()}
-            total_data.append(data)
-        
+            total_data['time'].append(time_data)
+            total_data['dc'].append(dc_data.mean())
+            total_data['graphy'].append(graphy_data.copy())
+
         return total_data
     
     def __run_tomography(self):
