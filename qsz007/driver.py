@@ -299,10 +299,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 # data = self.data_queue.get(block=True, timeout=timeout)
                 buf_index, tag_cnt, data_cnt = self.data_queue.get(block=True, timeout=timeout)
                 with self.lock:
-                    t0 = time.time()
-                    data = self.__data_process(buf_index=buf_index, tag_cnt=tag_cnt, data_cnt=data_cnt)
-                    dt = time.time() - t0
-                    print(f"run time: {dt:.4f} s")
+                    # data = self.__data_process(buf_index=buf_index, tag_cnt=tag_cnt, data_cnt=data_cnt)
+                    data = self.dma_time_buf[buf_index].copy(), self.dma_dc_buf[buf_index].copy(), self.dma_graphy_buf[buf_index].copy()
                 # if we stopped the readout while we were waiting for data, break out and return
                 if self.stop_flag.is_set():
                     break
