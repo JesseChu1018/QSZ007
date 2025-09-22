@@ -348,44 +348,44 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.dma_dc.recvchannel.wait()
         self.dma_graphy.recvchannel.wait()
 
-    def __data_process(self, buf_index, tag_cnt, data_cnt):
-        """
-        Process the acquired data for the given cycle count.
-        :return: List of dictionaries containing time, dc, and graphy data.
-        """
-        # tag_cnt = self.rx_tag_cnt
-        # data_cnt = self.rx_data_cnt * self.INTERPOLATION
+    # def __data_process(self, buf_index, tag_cnt, data_cnt):
+    #     """
+    #     Process the acquired data for the given cycle count.
+    #     :return: List of dictionaries containing time, dc, and graphy data.
+    #     """
+    #     # tag_cnt = self.rx_tag_cnt
+    #     # data_cnt = self.rx_data_cnt * self.INTERPOLATION
 
-        time_buf = self.dma_time_buf[buf_index]
-        dc_buf = self.dma_dc_buf[buf_index]
-        graphy_buf = self.dma_graphy_buf[buf_index]
-        start_clk = 0
-        total_data = {'time': [], 'dc': [], 'graphy': []}
-        for i in range(tag_cnt):
-            time_data = time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
+    #     time_buf = self.dma_time_buf[buf_index]
+    #     dc_buf = self.dma_dc_buf[buf_index]
+    #     graphy_buf = self.dma_graphy_buf[buf_index]
+    #     start_clk = 0
+    #     total_data = {'time': [], 'dc': [], 'graphy': []}
+    #     for i in range(tag_cnt):
+    #         time_data = time_buf[i] / (self['adc']['fs'] * 1000) # Convert to ms
             
-            dc_data = dc_buf[i * self.INTERPOLATION:(i + 1) * self.INTERPOLATION]
-            dc_data = np.frombuffer(dc_data, dtype=np.int16)
+    #         dc_data = dc_buf[i * self.INTERPOLATION:(i + 1) * self.INTERPOLATION]
+    #         dc_data = np.frombuffer(dc_data, dtype=np.int16)
             
-            pre_quotient = now_quotient if i > 0 else 0
-            now_quotient = time_buf[i] // self.INTERPOLATION
-            residue_clk = time_buf[i] % self.INTERPOLATION
-            delta_clk = (now_quotient - pre_quotient) if i > 0 else 0
-            if delta_clk > self.graphy_clk:
-                delta_clk = self.graphy_clk
-            start_clk += delta_clk
-            start_index = start_clk * self.INTERPOLATION + residue_clk
-            end_index = start_index + 1000
-            if end_index > data_cnt:
-                raise RuntimeError("Data index out of range.")
-            graphy_data = graphy_buf[start_index:end_index]
-            graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
+    #         pre_quotient = now_quotient if i > 0 else 0
+    #         now_quotient = time_buf[i] // self.INTERPOLATION
+    #         residue_clk = time_buf[i] % self.INTERPOLATION
+    #         delta_clk = (now_quotient - pre_quotient) if i > 0 else 0
+    #         if delta_clk > self.graphy_clk:
+    #             delta_clk = self.graphy_clk
+    #         start_clk += delta_clk
+    #         start_index = start_clk * self.INTERPOLATION + residue_clk
+    #         end_index = start_index + 1000
+    #         if end_index > data_cnt:
+    #             raise RuntimeError("Data index out of range.")
+    #         graphy_data = graphy_buf[start_index:end_index]
+    #         graphy_data = np.frombuffer(graphy_data, dtype=np.int16)
 
-            total_data['time'].append(time_data)
-            total_data['dc'].append(dc_data.mean())
-            total_data['graphy'].append(graphy_data.copy())
+    #         total_data['time'].append(time_data)
+    #         total_data['dc'].append(dc_data.mean())
+    #         total_data['graphy'].append(graphy_data.copy())
 
-        return total_data
+    #     return total_data
     
     def __run_tomography(self):
         """
@@ -416,29 +416,28 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     t_start = time.time()
                     with self.lock:
                         self.start = 1
-                    for i in range(cycle_reg):
-                        with self.lock:
+                        for i in range(cycle_reg):
                             self.__data_acquire(i, time_len, dc_len, graphy_len)
                             self.__data_wait()
-                        while cycle == i:
-                            error, cycle = self.get_state()
-                        if error:
-                            self.error_queue.put(f"Error occurred during tomography.")
-                        tag_cnt.append(self.rx_tag_cnt)
-                        data_cnt.append(self.rx_data_cnt * self.INTERPOLATION)
-                    for i in range(cycle_reg):
-                        if self.stop_flag.is_set():
-                            break
-                        # data = self.__data_process(buf_index=i, tag_cnt=tag_cnt[i], data_cnt=data_cnt[i])
-                        data = i, tag_cnt[i], data_cnt[i]
-                        self.data_queue.put(data)
-                    cycle_target -= cycle_reg
-                    dt = time.time() - t_start
-                    while (dt < (self.cycle_period * cycle_reg)) or (not self.data_queue.empty()):
-                        if self.stop_flag.is_set():
-                            break
-                        time.sleep(0.001)
+                            while cycle == i:
+                                error, cycle = self.get_state()
+                            if error:
+                                self.error_queue.put(f"Error occurred during tomography.")
+                            tag_cnt.append(self.rx_tag_cnt)
+                            data_cnt.append(self.rx_data_cnt * self.INTERPOLATION)
+                        for i in range(cycle_reg):
+                            if self.stop_flag.is_set():
+                                break
+                            # data = self.__data_process(buf_index=i, tag_cnt=tag_cnt[i], data_cnt=data_cnt[i])
+                            data = i, tag_cnt[i], data_cnt[i]
+                            self.data_queue.put(data)
+                        cycle_target -= cycle_reg
                         dt = time.time() - t_start
+                        while (dt < (self.cycle_period * cycle_reg)) or (not self.data_queue.empty()):
+                            if self.stop_flag.is_set():
+                                break
+                            time.sleep(0.001)
+                            dt = time.time() - t_start
             except Exception as e:
                 self.error_queue.put(str(e))
             finally:
