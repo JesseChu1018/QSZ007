@@ -426,7 +426,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                         data = i, tag_cnt[i], data_cnt[i]
                         self.data_queue.put(data)
                     cycle_target -= cycle_reg
-                    self.data_ready.set()
                     dt = time.time() - t_start
                     while (dt < (self.cycle_period * cycle_reg)) or (not self.data_queue.empty()):
                         if self.stop_flag.is_set():
