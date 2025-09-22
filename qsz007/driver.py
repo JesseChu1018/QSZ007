@@ -133,24 +133,12 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         # self.dma_graphy_buf = allocate(shape=(self.TRIGGER_LIMIT * 1024), dtype=np.int16)
 
         self.__start_thread()
-        
-    def configure_connections(self, soc):
-        super().configure_connections(soc)
-
-        trace_result = soc.metadata.trace_forward(self.fullpath, self.DMA_TIME_PORT, ["axi_dma"], 1)
-        block, _, _ = trace_result[0]
-        self.dma_time = getattr(soc, block)
-
-        trace_result = soc.metadata.trace_forward(self.fullpath, self.DMA_DC_PORT, ["axi_dma"], 1)
-        block, _, _ = trace_result[0]
-        self.dma_dc = getattr(soc, block)
-
-        trace_result = soc.metadata.trace_forward(self.fullpath, self.DMA_GRAPHY_PORT, ["axi_dma"], 1)
-        block, _, _ = trace_result[0]
-        self.dma_graphy = getattr(soc, block)
 
     def configure(self):
         super().configure()
+
+        self['interpolation'] = self.INTERPOLATION
+        self['graphy_clk'] = self.graphy_clk
 
         # Allocate DMA buffers
         self.dma_time_buf = []
@@ -180,6 +168,21 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.tx_ratio_fall = int(np.round((self.DAC_MAXV * 2**16) / half_period) * -1)
         self.rx_tri_mode = 0
         self.rx_threshold = self.DAC_MAXV / 2
+        
+    def configure_connections(self, soc):
+        super().configure_connections(soc)
+
+        trace_result = soc.metadata.trace_forward(self.fullpath, self.DMA_TIME_PORT, ["axi_dma"], 1)
+        block, _, _ = trace_result[0]
+        self.dma_time = getattr(soc, block)
+
+        trace_result = soc.metadata.trace_forward(self.fullpath, self.DMA_DC_PORT, ["axi_dma"], 1)
+        block, _, _ = trace_result[0]
+        self.dma_dc = getattr(soc, block)
+
+        trace_result = soc.metadata.trace_forward(self.fullpath, self.DMA_GRAPHY_PORT, ["axi_dma"], 1)
+        block, _, _ = trace_result[0]
+        self.dma_graphy = getattr(soc, block)
 
     def set_cycle(self, cycle:int=1):
         """
@@ -300,7 +303,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 buf_index, tag_cnt, data_cnt = self.data_queue.get(block=True, timeout=timeout)
                 with self.lock:
                     # data = self.__data_process(buf_index=buf_index, tag_cnt=tag_cnt, data_cnt=data_cnt)
-                    data = self.dma_time_buf[buf_index].copy(), self.dma_dc_buf[buf_index].copy(), self.dma_graphy_buf[buf_index].copy()
+                    data = tag_cnt, data_cnt, self.dma_time_buf[buf_index].copy(), self.dma_dc_buf[buf_index].copy(), self.dma_graphy_buf[buf_index].copy()
                 # if we stopped the readout while we were waiting for data, break out and return
                 if self.stop_flag.is_set():
                     break

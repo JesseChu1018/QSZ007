@@ -180,6 +180,8 @@ class SOC(Overlay):
 
         for i, ip in enumerate(self.socip):
             ip.configure()
+
+        self['driver'] = [socip.cfg for socip in self.socip]
         
     def __balun_init(self):
         gpio = self.axi_gpio_0.channel1
@@ -237,7 +239,22 @@ class SOC(Overlay):
         except Exception as e:
             return False, traceback.format_exc()
         return True, None
-        
+    
+    def get_cfg(self):
+        """Return the configuration dictionary.
+        This contains everything you need to recreate the QickConfig.
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        dict
+            configuration dictionary
+
+        """
+        return True, self._cfg
+    
     def set_cycle(self, ch:int=0, cycle:int=1):
         """
         This method sets the cycle number for the specified channel.
