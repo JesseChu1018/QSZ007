@@ -300,9 +300,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 pass
             try:
                 # data = self.data_queue.get(block=True, timeout=timeout)
-                buf_index, tag_cnt, data_cnt = self.data_queue.get(block=True, timeout=timeout)
                 with self.lock:
-                    # data = self.__data_process(buf_index=buf_index, tag_cnt=tag_cnt, data_cnt=data_cnt)
+                    buf_index, tag_cnt, data_cnt = self.data_queue.get(block=True, timeout=timeout)
                     time_buf = np.frombuffer(self.dma_time_buf[buf_index], dtype=np.uint32)
                     dc_buf = np.frombuffer(self.dma_dc_buf[buf_index], dtype=np.int16)
                     graphy_buf = np.frombuffer(self.dma_graphy_buf[buf_index], dtype=np.int16)
