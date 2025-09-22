@@ -2,6 +2,7 @@
 Drivers for QRNG.
 """
 from abc import ABC
+import threading
 from threading import Thread, Event
 from queue import Queue, Empty
 import time
@@ -121,6 +122,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
 
     def __init__(self, description):
         super().__init__(description)
+        self.lock = threading.Lock()
         # Generics
         self.INTERPOLATION = int(description['parameters']['INTERPOLATION'])
 
@@ -294,7 +296,10 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             except Empty:
                 pass
             try:
-                data = self.data_queue.get(block=True, timeout=timeout)
+                # data = self.data_queue.get(block=True, timeout=timeout)
+                buf_index, tag_cnt, data_cnt = self.data_queue.get(block=True, timeout=timeout)
+                with self.lock:
+                    data = self.__data_process(buf_index=buf_index, tag_cnt=tag_cnt, data_cnt=data_cnt)
                 # if we stopped the readout while we were waiting for data, break out and return
                 if self.stop_flag.is_set():
                     break
@@ -402,10 +407,12 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                         cycle_reg = 1
                         self.cycle = 1
                     t_start = time.time()
-                    self.start = 1
+                    with self.lock:
+                        self.start = 1
                     for i in range(cycle_reg):
-                        self.__data_acquire(i, time_len, dc_len, graphy_len)
-                        self.__data_wait()
+                        with self.lock:
+                            self.__data_acquire(i, time_len, dc_len, graphy_len)
+                            self.__data_wait()
                         while cycle == i:
                             error, cycle = self.get_state()
                         if error:
@@ -415,9 +422,11 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     for i in range(cycle_reg):
                         if self.stop_flag.is_set():
                             break
-                        data = self.__data_process(buf_index=i, tag_cnt=tag_cnt[i], data_cnt=data_cnt[i])
+                        # data = self.__data_process(buf_index=i, tag_cnt=tag_cnt[i], data_cnt=data_cnt[i])
+                        data = i, tag_cnt[i], data_cnt[i]
                         self.data_queue.put(data)
                     cycle_target -= cycle_reg
+                    self.data_ready.set()
                     dt = time.time() - t_start
                     while (dt < (self.cycle_period * cycle_reg)) or (not self.data_queue.empty()):
                         if self.stop_flag.is_set():
