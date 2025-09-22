@@ -430,13 +430,13 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                             # data = self.__data_process(buf_index=i, tag_cnt=tag_cnt[i], data_cnt=data_cnt[i])
                             data = i, tag_cnt[i], data_cnt[i]
                             self.data_queue.put(data)
-                        cycle_target -= cycle_reg
+                    cycle_target -= cycle_reg
+                    dt = time.time() - t_start
+                    while (dt < (self.cycle_period * cycle_reg)) or (not self.data_queue.empty()):
+                        if self.stop_flag.is_set():
+                            break
+                        time.sleep(0.001)
                         dt = time.time() - t_start
-                        while (dt < (self.cycle_period * cycle_reg)) or (not self.data_queue.empty()):
-                            if self.stop_flag.is_set():
-                                break
-                            time.sleep(0.001)
-                            dt = time.time() - t_start
             except Exception as e:
                 self.error_queue.put(str(e))
             finally:
