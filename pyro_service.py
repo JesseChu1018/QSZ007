@@ -18,10 +18,18 @@ settings = json.load(open(setting_file))
 #bitfile = '../qick_lib/qick/' + settings['bitfile']
 bitfile = settings['bitfile']
 proxy_name = settings['proxy_name']
-ns_port = settings['ns_port']
+
+ns_ip = settings['ns_ip']
 # set to 0.0.0.0 to allow access from outside systems
 ns_host = settings['ns_host']
-ns_ip = settings['ns_ip']
+ns_port = settings['ns_port']
+
+host_ip = settings['host_ip']
+host_port = settings['host_port']
+
+nat_ip = settings['nat_ip']
+nat_port = settings['nat_port']
+
 enable_nameserver = settings['enable_nameserver']
 
 ############
@@ -41,6 +49,10 @@ time.sleep(5)
 start_server(
     bitfile=bitfile,
     proxy_name=proxy_name,
-    ns_host= ns_ip,
-    ns_port=ns_port
+    ns_ip=ns_ip,
+    ns_port=ns_port,
+    host_ip=host_ip,
+    host_port=host_port,
+    nat_ip=nat_ip,
+    nat_port=nat_port
 )

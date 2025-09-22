@@ -2,7 +2,7 @@ import Pyro4
 import Pyro4.naming
 from qsz007.qsz007 import SOC
 
-def start_server(ns_host, ns_port=8888, proxy_name='qrng', **kwargs):
+def start_server(ns_ip, ns_port, host_ip, host_port, nat_ip, nat_port, proxy_name='qrng', **kwargs):
     """Initializes the QickSoc and starts a Pyro4 proxy server.
 
     Parameters
@@ -28,14 +28,16 @@ def start_server(ns_host, ns_port=8888, proxy_name='qrng', **kwargs):
     Pyro4.config.PICKLE_PROTOCOL_VERSION=4
 
     print("looking for nameserver . . .")
-    ns = Pyro4.locateNS(host=ns_host, port=ns_port)
+    ns = Pyro4.locateNS(host=ns_ip, port=ns_port)
     print("found nameserver")
 
     # if we have multiple network interfaces, we want to register the daemon using the IP address that faces the nameserver
     host = Pyro4.socketutil.getInterfaceAddress(ns._pyroUri.host)
     # if the nameserver is running on the QICK, the above will usually return the loopback address - not useful
-
-    daemon = Pyro4.Daemon(host=host)
+    if nat_ip:
+        daemon = Pyro4.Daemon(host=host_ip, port =host_port, nathost= nat_ip, natport = nat_port )
+    else:
+        daemon = Pyro4.Daemon(host=host_ip, port =host_port )
 
     # if you want to use a different firmware image or set some initialization options, you would do that here
     device = SOC(bitfile=kwargs.get('bitfile', None),download=True)
