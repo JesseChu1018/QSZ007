@@ -372,11 +372,11 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.rx_dc_en = 0  # Disable DC acquisition
         t_start = time.time()
         with self.lock:
-            print("Starting data acquisition...")
             self.start = 1
             for i in range(cycle):
                 self.dma_time.recvchannel.transfer(self.dma_tag_buf[i], nbytes=int(tag_len))
                 self.dma_graphy.recvchannel.transfer(self.dma_graphy_buf[i], nbytes=int(graphy_len))
+                print(f"Starting data acquisition for cycle {i}...")
                 self.dma_time.recvchannel.wait()
                 self.dma_graphy.recvchannel.wait()
                 print(f"Data acquisition for cycle {i} completed.")
@@ -409,17 +409,14 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.rx_dc_en = 1  # Enable DC acquisition
         t_start = time.time()
         with self.lock:
-            print("Starting DC acquisition...")
             self.start = 1
             for i in range(cycle):
                 self.dma_dc.recvchannel.transfer(self.dma_dc_buf[i], nbytes=int(dc_len))
                 self.dma_dc.recvchannel.wait()
-                print(f"DC acquisition for cycle {i} completed.")
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
                 if error:
                     self.error_queue.put(f"Error occurred during tomography.")
-                print(f'Cycle {i} state checked: error={error}, cycle_cnt={cycle_cnt}')
                 data = 'DC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION)
                 self.data_queue.put(data)
         dt = time.time() - t_start
@@ -442,11 +439,9 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 dc_limit = self.rx_dc_limit
                 print(f'Set tomography for {cycle} cycles with tag_len={tag_len}, graphy_len={graphy_len}, dc_limit={dc_limit}.')
 
-                print(f'Starting tomography for {cycle} cycles...')
                 self.__dc_process(cycle=2, dc_limit=dc_limit)
                 
                 while cycle > 0:
-                    print(f'Processing tomography data, {cycle} cycles remaining...')
                     self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
