@@ -447,9 +447,11 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     print(f'Collecting AC data for {min(2, cycle)} cycles...')
                     self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
+                    time.sleep(1)  # Short delay between cycles
 
                 # print(f'Collecting DC data for {2} cycles...')
                 # self.__dc_process(cycle=2, dc_limit=dc_limit)
+                self.rx_dc_limit = dc_limit # Restore DC limit
             except Exception as e:
                 self.error_queue.put(str(e))
             finally:
