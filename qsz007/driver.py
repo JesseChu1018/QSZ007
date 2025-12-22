@@ -440,6 +440,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 tag_len = self.trigger_num * 4 # 4 bytes for each time point
                 graphy_len = self.trigger_num * 1024 * 2 # 2 bytes for each graphy point
                 dc_limit = self.rx_dc_limit
+                print(f'Set tomography for {cycle} cycles with tag_len={tag_len}, graphy_len={graphy_len}, dc_limit={dc_limit}.')
 
                 print(f'Starting tomography for {cycle} cycles...')
                 self.__dc_process(cycle=2, dc_limit=dc_limit)
