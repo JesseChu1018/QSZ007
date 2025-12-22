@@ -376,21 +376,19 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             for i in range(cycle):
                 self.dma_time.recvchannel.transfer(self.dma_tag_buf[i], nbytes=int(tag_len))
                 self.dma_graphy.recvchannel.transfer(self.dma_graphy_buf[i], nbytes=int(graphy_len))
-                print(f"Starting AC acquisition for cycle {i}...")
                 self.dma_time.recvchannel.wait()
                 self.dma_graphy.recvchannel.wait()
-                print(f"AC acquisition for cycle {i} completed.")
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
                 if error:
                     self.error_queue.put(f"Error occurred during AC acquisition.")
-                print(f'AC Cycle {i} state checked: error={error}, cycle_cnt={cycle_cnt}')
                 data = 'AC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION), 0
                 self.data_queue.put(data)
         dt = time.time() - t_start
         while (dt < (self.cycle_period * cycle)) or (not self.data_queue.empty()):
             time.sleep(0.001)
             dt = time.time() - t_start
+        print(f'AC acquisition time: {dt:.3f}s for {cycle} cycles.')
     
     def __dc_process(self, cycle, dc_limit):
         """
@@ -412,19 +410,18 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             self.start = 1
             for i in range(cycle):
                 self.dma_dc.recvchannel.transfer(self.dma_dc_buf[i], nbytes=int(dc_len))
-                print(f"Starting DC acquisition for cycle {i}...")
                 self.dma_dc.recvchannel.wait()
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
                 if error:
                     self.error_queue.put(f"Error occurred during DC acquisition.")
-                print(f'DC Cycle {i} state checked: error={error}, cycle_cnt={cycle_cnt}')
                 data = 'DC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION), dc_limit
                 self.data_queue.put(data)
         dt = time.time() - t_start
         while (dt < (self.cycle_period * cycle)) or (not self.data_queue.empty()):
             time.sleep(0.001)
             dt = time.time() - t_start
+        print(f'DC acquisition time: {dt:.3f}s for {cycle} cycles.')
     
     def __run_tomography(self):
         """
@@ -447,7 +444,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     print(f'Collecting AC data for {min(2, cycle)} cycles...')
                     self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
-                    time.sleep(0.1)  # Short delay between cycles
 
                 # print(f'Collecting DC data for {2} cycles...')
                 # self.__dc_process(cycle=2, dc_limit=dc_limit)
