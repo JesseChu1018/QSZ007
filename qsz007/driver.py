@@ -329,14 +329,14 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             try:
                 # data = self.data_queue.get(block=True, timeout=timeout)
                 with self.lock:
-                    type, buf_index, tag_cnt, data_cnt = self.data_queue.get(block=True, timeout=timeout)
+                    type, buf_index, tag_cnt, data_cnt, dc_cnt = self.data_queue.get(block=True, timeout=timeout)
                     if type == 'DC':
-                        dc_buf = np.frombuffer(self.dma_dc_buf[buf_index], dtype=np.int16)
+                        dc_buf = np.frombuffer(self.dma_dc_buf[buf_index][:dc_cnt], dtype=np.int16)
                         data = dc_buf.copy()
                     else:  # 'AC'
-                        tag_buf = np.frombuffer(self.dma_tag_buf[buf_index], dtype=np.uint32)
-                        graphy_buf = np.frombuffer(self.dma_graphy_buf[buf_index], dtype=np.int16)
-                        data = tag_cnt, data_cnt, tag_buf.copy(), graphy_buf.copy()
+                        tag_buf = np.frombuffer(self.dma_tag_buf[buf_index][:tag_cnt], dtype=np.uint32)
+                        graphy_buf = np.frombuffer(self.dma_graphy_buf[buf_index][:data_cnt], dtype=np.int16)
+                        data = tag_buf.copy(), graphy_buf.copy()
                     package = {'type': type, 'data': data}
                 new_data.append(package)
             except Empty:
@@ -385,7 +385,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 if error:
                     self.error_queue.put(f"Error occurred during AC acquisition.")
                 print(f'AC Cycle {i} state checked: error={error}, cycle_cnt={cycle_cnt}')
-                data = 'AC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION)
+                data = 'AC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION), 0
                 self.data_queue.put(data)
         dt = time.time() - t_start
         while (dt < (self.cycle_period * cycle)) or (not self.data_queue.empty()):
@@ -419,7 +419,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 if error:
                     self.error_queue.put(f"Error occurred during DC acquisition.")
                 print(f'DC Cycle {i} state checked: error={error}, cycle_cnt={cycle_cnt}')
-                data = 'DC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION)
+                data = 'DC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION), dc_limit
                 self.data_queue.put(data)
         dt = time.time() - t_start
         while (dt < (self.cycle_period * cycle)) or (not self.data_queue.empty()):
@@ -441,15 +441,15 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 dc_limit = self.rx_dc_limit
                 print(f'Set tomography for {cycle} cycles with tag_len={tag_len}, graphy_len={graphy_len}, dc_limit={dc_limit}.')
 
-                self.__dc_process(cycle=2, dc_limit=dc_limit)
+                # self.__dc_process(cycle=2, dc_limit=dc_limit)
                 
                 while cycle > 0:
                     print(f'Collecting AC data for {min(2, cycle)} cycles...')
                     self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
-                print(f'Collecting DC data for {2} cycles...')
-                self.__dc_process(cycle=2, dc_limit=dc_limit)
+                # print(f'Collecting DC data for {2} cycles...')
+                # self.__dc_process(cycle=2, dc_limit=dc_limit)
             except Exception as e:
                 self.error_queue.put(str(e))
             finally:
