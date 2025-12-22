@@ -377,11 +377,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             for i in range(cycle):
                 self.dma_time.recvchannel.transfer(self.dma_tag_buf[i], nbytes=int(tag_len))
                 self.dma_graphy.recvchannel.transfer(self.dma_graphy_buf[i], nbytes=int(graphy_len))
-                print(f'cycle_cnt={cycle_cnt}')
-                self.dma_graphy.recvchannel.wait()
-                print("test1")
                 self.dma_time.recvchannel.wait()
-                print("test2")
+                self.dma_graphy.recvchannel.wait()
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
                 if error:
