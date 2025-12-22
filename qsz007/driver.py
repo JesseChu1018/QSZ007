@@ -379,6 +379,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 self.dma_graphy.recvchannel.transfer(self.dma_graphy_buf[i], nbytes=int(graphy_len))
                 print(f'cycle_cnt={cycle_cnt}')
                 self.dma_time.recvchannel.wait()
+                print("test")
                 self.dma_graphy.recvchannel.wait()
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
