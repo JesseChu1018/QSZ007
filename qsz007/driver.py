@@ -120,8 +120,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
     # Name of the input connect to RFDC.
     ADC_RFDC_PORT = 'S0_ADC'
     DMA_TIME_PORT = 'M0_ADC'
-    DMA_DC_PORT = 'M1_ADC'
-    DMA_GRAPHY_PORT = 'M2_ADC'
+    DMA_GRAPHY_PORT = 'M1_ADC'
+    DMA_DC_PORT = 'M2_ADC'
 
     TRIGGER_LIMIT = 15000  # Maximum number of triggers per cycle.
     DC_RATE = 500  # DC sampling rate in KHz.
