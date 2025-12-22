@@ -295,6 +295,19 @@ class SOC(Overlay):
         
         return True, None
     
+    def set_trigger_mode(self, ch:int=0, mode:int=1, wait_time_us:float=1):
+        """
+        This method sets the trigger mode for the specified channel.
+        """
+        if ch > len(self.socip) - 1 or ch < 0:
+            return False, (f"Invalid channel number: {ch}. Valid range is 0 to {len(self.socip) - 1}.")
+        if not isinstance(self.socip[ch], AxisTomography):
+            return False, (f"Channel {ch} is not a valid AxisTomography instance.")
+
+        self.socip[ch].set_trigger_mode(mode, wait_time_us)
+        
+        return True, None
+    
     def set_threshold(self, ch:int=0, threshold:float=0.5):
         """
         This method sets the ADC threshold for the specified channel.
