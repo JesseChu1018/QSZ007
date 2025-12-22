@@ -383,7 +383,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
                 if error:
-                    self.error_queue.put(f"Error occurred during tomography.")
+                    self.error_queue.put(f"Error occurred during AC acquisition.")
                 print(f'Cycle {i} state checked: error={error}, cycle_cnt={cycle_cnt}')
                 data = 'AC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION)
                 self.data_queue.put(data)
@@ -416,7 +416,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
                 if error:
-                    self.error_queue.put(f"Error occurred during tomography.")
+                    self.error_queue.put(f"Error occurred during DC acquisition.")
                 data = 'DC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION)
                 self.data_queue.put(data)
         dt = time.time() - t_start
@@ -442,6 +442,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 self.__dc_process(cycle=2, dc_limit=dc_limit)
                 
                 while cycle > 0:
+                    print(f'Collecting AC data for {min(2, cycle)} cycles...')
                     self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
