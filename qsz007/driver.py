@@ -328,8 +328,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 pass
             try:
                 # data = self.data_queue.get(block=True, timeout=timeout)
+                type, buf_index, tag_cnt, data_cnt, dc_cnt = self.data_queue.get(block=True, timeout=timeout)
                 with self.lock:
-                    type, buf_index, tag_cnt, data_cnt, dc_cnt = self.data_queue.get(block=True, timeout=timeout)
                     if type == 'DC':
                         dc_buf = np.frombuffer(self.dma_dc_buf[buf_index][:dc_cnt], dtype=np.int16)
                         data = dc_buf.copy()
