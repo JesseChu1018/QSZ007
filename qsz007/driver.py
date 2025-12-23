@@ -231,11 +231,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         fall_clk = int(np.round(fall_time_ms * 1000 * self['dac']['f_fabric']))
         self.tx_tag_fall = rise_clk - 1
         self.tx_period = rise_clk + fall_clk - 1
-        ratio_rise = int(np.round((self.DAC_MAXV * max_scal * 2**16) / rise_clk))
-        ratio_fall = (int(np.round((self.DAC_MAXV * max_scal * 2**16) / fall_clk)) * -1) # Negative for fall
-        print(f'Set waveform: rise_clk={rise_clk}, fall_clk={fall_clk}, ratio_rise={ratio_rise}, ratio_fall={ratio_fall}.')
-        # self.tx_ratio_rise = ratio_rise
-        # self.tx_ratio_fall = ratio_fall
         self.tx_ratio_rise = int(np.round((self.DAC_MAXV * max_scal * 2**16) / rise_clk)) # Positive for rise
         self.tx_ratio_fall = (int(np.round((self.DAC_MAXV * max_scal * 2**16) / fall_clk)) * -1) # Negative for fall
         self.rx_tri_limit = self.trigger_num
@@ -259,7 +254,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         fall_clk = int(np.round(fall_ms * 1000 * self['dac']['f_fabric']))
         self.ttl[ttl_bit]['rise'] = rise_clk - 1
         self.ttl[ttl_bit]['fall'] = fall_clk - 1
-        print(f'Set TTL{ttl_bit}: rise_clk={rise_clk}, fall_clk={fall_clk}.')
         # setattr(self, "tx_ttl%d_rise"%(ttl_bit), self.ttl[ttl_bit]['rise'])
         # setattr(self, "tx_ttl%d_fall"%(ttl_bit), self.ttl[ttl_bit]['fall'])
 
@@ -373,7 +367,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         # for i in range(8):
         #     setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
         #     setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
-        self.rx_tri_limit = self.trigger_num
+        # self.rx_tri_limit = self.trigger_num
         self.rx_dc_limit = 0
         self.rx_dc_en = 0  # Disable DC acquisition
         t_start = time.time()
@@ -454,11 +448,13 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                         for i in range(8):
                             setattr(self, "tx_ttl%d_rise"%(i), (2**32 - 1))
                             setattr(self, "tx_ttl%d_fall"%(i), (2**32 - 1))
+                        self.rx_tri_limit = 0
                         self.__data_process(cycle=min(2, cycle), tag_len=0, graphy_len=0)
                     else:
                         for i in range(8):
                             setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
                             setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
+                        self.rx_tri_limit = self.trigger_num
                         self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
