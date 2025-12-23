@@ -234,10 +234,10 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         ratio_rise = int(np.round((self.DAC_MAXV * max_scal * 2**16) / rise_clk))
         ratio_fall = (int(np.round((self.DAC_MAXV * max_scal * 2**16) / fall_clk)) * -1) # Negative for fall
         print(f'Set waveform: rise_clk={rise_clk}, fall_clk={fall_clk}, ratio_rise={ratio_rise}, ratio_fall={ratio_fall}.')
-        self.tx_ratio_rise = ratio_rise
-        self.tx_ratio_fall = ratio_fall
-        # self.tx_ratio_rise = int(np.round((self.DAC_MAXV * max_scal * 2**16) / rise_clk)) # Positive for rise
-        # self.tx_ratio_fall = (int(np.round((self.DAC_MAXV * max_scal * 2**16) / fall_clk)) * -1) # Negative for fall
+        # self.tx_ratio_rise = ratio_rise
+        # self.tx_ratio_fall = ratio_fall
+        self.tx_ratio_rise = int(np.round((self.DAC_MAXV * max_scal * 2**16) / rise_clk)) # Positive for rise
+        self.tx_ratio_fall = (int(np.round((self.DAC_MAXV * max_scal * 2**16) / fall_clk)) * -1) # Negative for fall
         self.rx_tri_limit = self.trigger_num
         self.rx_dc_limit = int(np.round(rise_time_ms * self.DC_RATE))  # 150ms * 500KHz
 
