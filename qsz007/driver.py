@@ -364,9 +364,9 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         error = False
         cycle_cnt = 0
         self.cycle = cycle
-        # for i in range(8):
-        #     setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
-        #     setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
+        for i in range(8):
+            setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
+            setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
         self.rx_tri_limit = self.trigger_num
         self.rx_dc_limit = 0
         self.rx_dc_en = 0  # Disable DC acquisition
@@ -375,11 +375,10 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             self.start = 1
             error, cycle_cnt = self.get_state()
             for i in range(cycle):
-                if (tag_len > 0) and (graphy_len > 0):
-                    self.dma_time.recvchannel.transfer(self.dma_tag_buf[i], nbytes=int(tag_len))
-                    self.dma_graphy.recvchannel.transfer(self.dma_graphy_buf[i], nbytes=int(graphy_len))
-                    self.dma_time.recvchannel.wait()
-                    self.dma_graphy.recvchannel.wait()
+                self.dma_time.recvchannel.transfer(self.dma_tag_buf[i], nbytes=int(tag_len))
+                self.dma_graphy.recvchannel.transfer(self.dma_graphy_buf[i], nbytes=int(graphy_len))
+                self.dma_time.recvchannel.wait()
+                self.dma_graphy.recvchannel.wait()
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
                 if error:
@@ -438,25 +437,15 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 tag_len = self.trigger_num * 4 # 4 bytes for each time point
                 graphy_len = self.trigger_num * 1024 * 2 # 2 bytes for each graphy point
                 dc_limit = self.rx_dc_limit
-                print(f'Set tomography for {cycle} cycles with tag_len={tag_len}, graphy_len={graphy_len}, dc_limit={dc_limit}.')
 
-                # self.__dc_process(cycle=2, dc_limit=dc_limit)
+                self.__dc_process(cycle=2, dc_limit=dc_limit)
                 
                 while cycle > 0:
-                    print(f'Collecting AC data for {min(2, cycle)} cycles...')
-                    if cycle >= 2:
-                        for i in range(8):
-                            setattr(self, "tx_ttl%d_rise"%(i), (2**32 - 1))
-                            setattr(self, "tx_ttl%d_fall"%(i), (2**32 - 1))
-                    else:
-                        for i in range(8):
-                            setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
-                            setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
                     self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
-                # print(f'Collecting DC data for {2} cycles...')
-                # self.__dc_process(cycle=2, dc_limit=dc_limit)
+                print(f'Collecting DC data for {2} cycles...')
+                self.__dc_process(cycle=2, dc_limit=dc_limit)
                 self.rx_dc_limit = dc_limit # Restore DC limit
             except Exception as e:
                 self.error_queue.put(str(e))
