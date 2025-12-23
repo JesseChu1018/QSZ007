@@ -410,7 +410,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             self.start = 1
             for i in range(cycle):
                 self.dma_dc.recvchannel.transfer(self.dma_dc_buf[i], nbytes=int(dc_len))
-                print(f'Start DC acquisition for cycle {i+1}...')
                 self.dma_dc.recvchannel.wait()
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
@@ -418,12 +417,10 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     self.error_queue.put(f"Error occurred during DC acquisition.")
                 data = 'DC', i, self.rx_tag_cnt, (self.rx_data_cnt * self.INTERPOLATION), dc_limit
                 self.data_queue.put(data)
-                print(f'Finished DC acquisition for cycle {i+1}.')
         dt = time.time() - t_start
         while (dt < (self.cycle_period * cycle)) or (not self.data_queue.empty()):
             time.sleep(0.001)
             dt = time.time() - t_start
-        print(f'DC acquisition time: {dt:.3f}s for {cycle} cycles.')
     
     def __run_tomography(self):
         """
@@ -445,7 +442,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
-                print(f'Collecting DC data for {2} cycles...')
                 self.__dc_process(cycle=2, dc_limit=dc_limit)
                 self.rx_dc_limit = dc_limit # Restore DC limit
             except Exception as e:
