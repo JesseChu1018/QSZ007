@@ -447,7 +447,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                     cycle -= 2
 
                 print(f'Collecting DC data for {2} cycles...')
-                self.__dc_process(cycle=2, dc_limit=dc_limit)
+                self.__dc_process(cycle=1, dc_limit=dc_limit)
                 self.rx_dc_limit = dc_limit # Restore DC limit
             except Exception as e:
                 self.error_queue.put(str(e))
