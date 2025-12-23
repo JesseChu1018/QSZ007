@@ -167,9 +167,9 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.tx_tag_fall = half_period - 1  # 150ms
         self.ttl = []
         for i in range(8):
-            self.ttl.append({'rise': ttl_rise - 1, 'fall': ttl_fall - 1})
-            setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])  # 150ms
-            setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])  # 150ms
+            self.ttl.append({'rise': (2**32 - 1), 'fall': (2**32 - 1)})  # Disable TTL by default
+            setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
+            setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
         self.tx_ratio_rise = int(np.round((self.DAC_MAXV * 2**16) / half_period))
         self.tx_ratio_fall = int(np.round((self.DAC_MAXV * 2**16) / half_period) * -1)
         self.trigger_num = int(np.round(150 * 10000 * 0.001)) # Number of triggers per cycle
@@ -364,9 +364,9 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         error = False
         cycle_cnt = 0
         self.cycle = cycle
-        for i in range(8):
-            setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
-            setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
+        # for i in range(8):
+        #     setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
+        #     setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
         self.rx_tri_limit = self.trigger_num
         self.rx_dc_limit = 0
         self.rx_dc_en = 0  # Disable DC acquisition
@@ -375,10 +375,11 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             self.start = 1
             error, cycle_cnt = self.get_state()
             for i in range(cycle):
-                self.dma_time.recvchannel.transfer(self.dma_tag_buf[i], nbytes=int(tag_len))
-                self.dma_graphy.recvchannel.transfer(self.dma_graphy_buf[i], nbytes=int(graphy_len))
-                self.dma_time.recvchannel.wait()
-                self.dma_graphy.recvchannel.wait()
+                if (tag_len > 0) and (graphy_len > 0):
+                    self.dma_time.recvchannel.transfer(self.dma_tag_buf[i], nbytes=int(tag_len))
+                    self.dma_graphy.recvchannel.transfer(self.dma_graphy_buf[i], nbytes=int(graphy_len))
+                    self.dma_time.recvchannel.wait()
+                    self.dma_graphy.recvchannel.wait()
                 while cycle_cnt == i:
                     error, cycle_cnt = self.get_state()
                 if error:
@@ -443,7 +444,16 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 
                 while cycle > 0:
                     print(f'Collecting AC data for {min(2, cycle)} cycles...')
-                    self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
+                    if cycle >= 2:
+                        for i in range(8):
+                            setattr(self, "tx_ttl%d_rise"%(i), (2**32 - 1))
+                            setattr(self, "tx_ttl%d_fall"%(i), (2**32 - 1))
+                        self.__data_process(cycle=min(2, cycle), tag_len=0, graphy_len=0)
+                    else:
+                        for i in range(8):
+                            setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
+                            setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
+                        self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
                 # print(f'Collecting DC data for {2} cycles...')
