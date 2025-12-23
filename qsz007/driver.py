@@ -156,8 +156,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             self.dma_graphy_buf.append(allocate(shape=(self.TRIGGER_LIMIT * 1024), dtype=np.int16))
 
         # Default TTL parameters.
-        ttl_rise = int(np.round(10 * 1000 * self['dac']['f_fabric']))  # 10ms
-        ttl_fall = int(np.round(140 * 1000 * self['dac']['f_fabric']))  # 140ms
         half_period = int(np.round(150 * 1000 * self['dac']['f_fabric']))  # 150ms
 
         # Default registers.
