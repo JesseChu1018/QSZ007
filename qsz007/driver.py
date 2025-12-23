@@ -367,7 +367,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         # for i in range(8):
         #     setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
         #     setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
-        # self.rx_tri_limit = self.trigger_num
+        self.rx_tri_limit = self.trigger_num
         self.rx_dc_limit = 0
         self.rx_dc_en = 0  # Disable DC acquisition
         t_start = time.time()
@@ -448,14 +448,11 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                         for i in range(8):
                             setattr(self, "tx_ttl%d_rise"%(i), (2**32 - 1))
                             setattr(self, "tx_ttl%d_fall"%(i), (2**32 - 1))
-                        self.rx_tri_limit = 0
-                        self.__data_process(cycle=min(2, cycle), tag_len=0, graphy_len=0)
                     else:
                         for i in range(8):
                             setattr(self, "tx_ttl%d_rise"%(i), self.ttl[i]['rise'])
                             setattr(self, "tx_ttl%d_fall"%(i), self.ttl[i]['fall'])
-                        self.rx_tri_limit = self.trigger_num
-                        self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
+                    self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
                 # print(f'Collecting DC data for {2} cycles...')
