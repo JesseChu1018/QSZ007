@@ -389,7 +389,6 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         while (dt < (self.cycle_period * cycle)) or (not self.data_queue.empty()):
             time.sleep(0.001)
             dt = time.time() - t_start
-        print(f'AC acquisition time: {dt:.3f}s for {cycle} cycles.')
     
     def __dc_process(self, cycle, dc_limit):
         """
@@ -440,14 +439,14 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 graphy_len = self.trigger_num * 1024 * 2 # 2 bytes for each graphy point
                 dc_limit = self.rx_dc_limit
 
-                # self.__dc_process(cycle=2, dc_limit=dc_limit)
+                self.__dc_process(cycle=2, dc_limit=dc_limit)
                 
                 while cycle > 0:
                     self.__data_process(cycle=min(2, cycle), tag_len=tag_len, graphy_len=graphy_len)
                     cycle -= 2
 
                 print(f'Collecting DC data for {2} cycles...')
-                self.__dc_process(cycle=1, dc_limit=dc_limit)
+                self.__dc_process(cycle=2, dc_limit=dc_limit)
                 self.rx_dc_limit = dc_limit # Restore DC limit
             except Exception as e:
                 self.error_queue.put(str(e))
