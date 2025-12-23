@@ -298,9 +298,9 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
             self.__start_thread()
 
         if not self.done_flag.is_set():
-            # self.stop_flag.set()
+            self.stop_flag.set()
             self.done_flag.wait()
-            # self.stop_flag.clear()
+            self.stop_flag.clear()
 
         if not self.data_queue.empty():
             self.poll_data(totaltime=-1, timeout=0.1)
@@ -345,7 +345,7 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         """
         Start the tomography thread.
         """
-        # self.stop_flag = Event()
+        self.stop_flag = Event()
         self.done_flag = Event()
         self.done_flag.set()
         self.par_queue = Queue()
@@ -385,6 +385,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 self.data_queue.put(data)
         dt = time.time() - t_start
         while (dt < (self.cycle_period * cycle)) or (not self.data_queue.empty()):
+            if self.stop_flag.is_set():
+                break
             time.sleep(0.001)
             dt = time.time() - t_start
     
@@ -417,6 +419,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                 self.data_queue.put(data)
         dt = time.time() - t_start
         while (dt < (self.cycle_period * cycle)) or (not self.data_queue.empty()):
+            if self.stop_flag.is_set():
+                break
             time.sleep(0.001)
             dt = time.time() - t_start
     
