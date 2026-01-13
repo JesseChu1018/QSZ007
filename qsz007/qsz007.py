@@ -35,10 +35,10 @@ class SOC(Overlay):
 
         self.__init_socip()
 
-        # if download:
-        #     self.__avtt_set(voltage="2.5V")
-        #     time.sleep(0.5)
-        #     self.__balun_init()
+        if download:
+            self.__avtt_set(voltage="2.5V")
+            time.sleep(0.5)
+            self.__balun_init()
 
     def __getitem__(self, key):
         return self._cfg[key]
