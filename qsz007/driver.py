@@ -214,8 +214,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         :param max_scal: Maximum scale (0-1).
         :param trigger_rate_hz: Trigger rate in Hz.
         """
-        if fall_time_ms < 50:
-            raise RuntimeError("fall_time_ms must be at least 50ms.")
+        if fall_time_ms < 20:
+            raise RuntimeError("fall_time_ms must be at least 20ms.")
         if not (0 <= max_scal <= 1):
             raise RuntimeError("max_scal must be between 0 and 1.")
         if trigger_rate_hz > 100000:
