@@ -110,10 +110,11 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
                  'rx_tri_mode': 26,
                  'rx_tri_wait_time': 27,
                  'rx_tri_edge': 28,
-                 'rx_tri_threshold': 29,
-                 'rx_dc_limit': 30,
-                 'rx_dc_en': 31,
-                 'rx_dc_rate': 32}
+                 'rx_tri_plus_th': 29,
+                 'rx_tri_minus_th': 30,
+                 'rx_dc_limit': 31,
+                 'rx_dc_en': 32,
+                 'rx_dc_rate': 33}
     
     # Name of the output connect to RFDC.
     DAC_RFDC_PORT = 'M0_DAC'
@@ -175,7 +176,8 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.rx_tri_mode = 1 # only consider plus trigger
         self.rx_tri_wait_time = int(np.round(1 * self['adc']['f_fabric'])) - 1 # wait plus trigger for 1us after minus trigger detected
         self.rx_tri_edge = 0
-        self.rx_tri_threshold = self.DAC_MAXV / 2
+        self.rx_tri_plus_th = self.DAC_MAXV / 2
+        self.rx_tri_minus_th = self.DAC_MAXV / 2
         self.rx_dc_limit = int(np.round(150 * self.DC_RATE))  # 150ms * 500KHz
         self.rx_dc_en = 0
         self.rx_dc_rate = int(np.round((self['adc']['f_fabric'] * 1.0e+3) / self.DC_RATE)) - 1 # 500KHz
@@ -267,15 +269,19 @@ class AxisTomography(AbsDacDriver, AbsAdcDriver):
         self.rx_tri_mode = mode
         self.rx_tri_wait_time = int(np.round(wait_time_us * self['adc']['f_fabric'])) - 1
     
-    def set_threshold(self, threshold:float=0.5):
+    def set_threshold(self, photon_type:str="plus", threshold:float=0.5):
         """
         Set the ADC threshold.
+        :param photon_type: Type of photon ("plus" or "minus").
         :param threshold: Threshold value (0-1).
         """
         if not (0 <= threshold <= 1):
             raise RuntimeError("Threshold must be between 0 and 1.")
 
-        self.rx_tri_threshold = int(np.round(self.DAC_MAXV * threshold))
+        if photon_type == "plus":
+            self.rx_tri_plus_th = int(np.round(self.DAC_MAXV * threshold))
+        else:
+            self.rx_tri_minus_th = int(np.round(self.DAC_MAXV * threshold))
 
     def get_state(self):
         """

@@ -308,7 +308,7 @@ class SOC(Overlay):
         
         return True, None
     
-    def set_threshold(self, ch:int=0, threshold:float=0.5):
+    def set_threshold(self, ch:int=0, photon_type:str="plus", threshold:float=0.5):
         """
         This method sets the ADC threshold for the specified channel.
         """
@@ -317,7 +317,7 @@ class SOC(Overlay):
         if not isinstance(self.socip[ch], AxisTomography):
             return False, (f"Channel {ch} is not a valid AxisTomography instance.")
 
-        self.socip[ch].set_threshold(threshold)
+        self.socip[ch].set_threshold(photon_type, threshold)
         
         return True, None
     

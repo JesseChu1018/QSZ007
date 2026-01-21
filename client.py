@@ -87,15 +87,17 @@ class Client:
         if not status:
             raise RuntimeError(error)
         
-    def set_threshold(self, ch:int=0, threshold:float=0.5):
+    def set_threshold(self, ch:int=0, photon_type:str="plus", threshold:float=0.5):
         """
         This method sets the threshold for photon detection.
         ch: int
             The channel index, 0 or 1.
+        photon_type: str
+            The type of photon ("plus" or "minus").
         threshold: float
             The threshold value for photon detection.
         """
-        status, error = self.remote_obj.set_threshold(ch, threshold)
+        status, error = self.remote_obj.set_threshold(ch, photon_type, threshold)
         if not status:
             raise RuntimeError(error)
         
